@@ -1,0 +1,164 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY24SU10",
+      "reportVersionAtImport": {
+        "visual": "1.8.95",
+        "report": "2.0.95",
+        "page": "1.3.95"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "Village_Early_Learning45688092028934535.json",
+      "reportVersionAtImport": {
+        "visual": "1.8.95",
+        "report": "2.0.95",
+        "page": "1.3.95"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "082cfe45c12d8050053d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Services"
+              }
+            },
+            "Property": "Conversion Flag"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "_",
+              "Entity": "_Services",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "_"
+                          }
+                        },
+                        "Property": "Conversion Flag"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "1L"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "publicCustomVisuals": [
+    "advanceCardE03760C5AB684758B56AA29F9E6C257B",
+    "ChicletSlicer1448559807354",
+    "PBI_CV_9272D058_BEA0_476A_B090_A712545F92FA",
+    "sankey02300D1BE6F5427989F3DE31CCA9E0F32020"
+  ],
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Frame_1_(1)_(1)7975543232908702.svg",
+          "path": "Frame_1_(1)_(1)7975543232908702.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Village_Early_Learning45688092028934535.json",
+          "path": "Village_Early_Learning45688092028934535.json",
+          "type": "Image"
+        },
+        {
+          "name": "Village-Logo-Stacked36343424781593114.png",
+          "path": "Village-Logo-Stacked36343424781593114.png",
+          "type": "Image"
+        }
+      ]
+    },
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY24SU10",
+          "path": "BaseThemes/CY24SU10.json",
+          "type": "BaseTheme"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  },
+  "slowDataSourceSettings": {
+    "isCrossHighlightingDisabled": false,
+    "isSlicerSelectionsButtonEnabled": false,
+    "isFilterSelectionsButtonEnabled": false,
+    "isFieldWellButtonEnabled": false,
+    "isApplyAllButtonEnabled": false
+  }
+}

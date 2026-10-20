@@ -1,0 +1,70 @@
+model Model
+	culture: en-AU
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-AU
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup KidSoft
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup KeyPay
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup Xero
+
+	annotation PBI_QueryGroupOrder = 4
+
+queryGroup Combined
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup Targets
+
+	annotation PBI_QueryGroupOrder = 5
+
+queryGroup Forms
+
+	annotation PBI_QueryGroupOrder = 6
+
+queryGroup LineLeader
+
+	annotation PBI_QueryGroupOrder = 3
+
+/// Errors in queries that were loaded on 2/05/2025 2:34:51 PM.
+queryGroup 'Query Errors - 2/05/2025 2:34:51 PM'
+
+	annotation PBI_QueryGroupOrder = 7
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["Contractor_Hours","_Measures","KS_AttendanceSummaryForDate","KS_Balances","KS_Bookings","KS_BookingTypes","KS_CCMSPayments","KS_Children","KS_ChildrenEnrolments","KS_DetailedBalances","KS_EnrolmentBalances","KS_Guardians","KS_GuardianChildren","KS_GuardianEnrolments","KS_OpeningHours","KS_Rooms","KS_SignIn Times","KS_ServiceDailyBalances","Targets_Weekly","Targets_Monthly","Targets_ComplianceRatio","Targets_AdditionalControllableCosts","Weekly_OccupancyAndRevenue","Monthly_OccupancyAndRevenue","Weekly WHPB_2025","KS_WaitingList","KP_Earnings Lines","KP_Employees","KP_Journals","KP_Locations","KP_Pay Categories","KP_Payments","KP_Roster","KP_Roster Breaks","KP_Pay Run Totals","KP_Pay Runs","KP_Payslips","KP_Kiosks","KP_Timesheets","KP_Timesheet Breaks","KP_LeaveCategories","KP_EmployeeLeaveBalance","KP_EmployingEntities","KP_EmployeeLocation","KP_LeaveHistoryDetailReport","KP_LeaveHistoryReport","KP_LeaveRequests","KP_PayGAdjustments","KP_PayRateTemplatePayCategories","KP_PayRateTemplates","Xero_Accounts","Xero_Account Type","Xero_CCE","Xero_Profit & Loss Report","Xero_Bank Transactions","Xero_Invoices","_Date","_Services","Xero_Expenses","Xero_Budget Line Balances","Monthly_WagesRev_2025","Monthly WHPB_2025","Monthly CCE_2025","Survey_Results","KidzBiz LDC_","KidzBiz OSCH","VEL White Gum Valley","VEL Stirling","VEL Claremont","VEL Harrisdale","VEL Piara Waters","Karrinyup","Smileys OSCH","LineLeader_Tasks","LineLeader_Families","LineLeader_Updates","LineLeader_IDsForEnquiries","LineLeader_FamilyChildren","Monthly_Occupancy_Budget","Tenure Sort Table","KP_Roster No Breaks","LineLeader_Enrollments","LineLeader_Statuses","LineLeader_Enquiries","Pipeline Waterfall","Xero_JournalTransactions","EquipmentFlag","Errors in Targets_Weekly","LineLeader_FamilyGuardians","ConversionSwitch"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table _Date
+ref table _Measures
+ref table _Services
+ref table LineLeader_Tasks
+ref table LineLeader_Families
+ref table LineLeader_Updates
+ref table LineLeader_IDsForEnquiries
+ref table LineLeader_FamilyChildren
+ref table SelectableDateTable
+ref table LineLeader_Enrollments
+ref table LineLeader_Statuses
+ref table LineLeader_Enquiries
+ref table LineLeader_FamilyGuardians
+ref table ConversionSwitch
+ref table ConversionPercentileSlider
+ref table ConversionViewMode
+ref table DaysSlider
+ref table TourToConversionPairs
+ref table Parameter
+
+ref cultureInfo en-AU
+

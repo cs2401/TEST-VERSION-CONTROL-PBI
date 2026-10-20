@@ -1,0 +1,1369 @@
+expression KP_EmployeeLocation =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayEmployees = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayEmployees"]}[Data],
+		    #"Removed Columns" = Table.RemoveColumns(dbo_KeyPayEmployees,{"dateCreated", "dateOfBirth", "gender", "externalId", "hoursPerDay", "status", "employmentType", "anniversaryDate", "terminationReason", "residentialStreetAddress", "residentialAddressLine2", "residentialSuburb", "residentialState", "residentialPostCode", "residentialCountry", "residentialAddressIsOverseas", "postalStreetAddress", "postalAddressLine2", "postalSuburb", "postalState", "postalPostCode", "postalCountry", "postalAddressIsOverseas", "emailAddress", "taxFileNumber", "tags", "jobTitle", "paySchedule", "primaryPayCategory", "primaryLocation", "paySlipNotificationType", "rate", "overrideTemplateRate", "rateUnit", "hoursPerWeek", "automaticallyPayEmployee", "leaveTemplate", "payRateTemplate", "payConditionRuleSet", "isEnabledForTimesheets", "workTypes", "leaveYearStart", "employingEntityABN", "employingEntityId", "australianResident", "claimTaxFreeThreshold", "seniorsTaxOffset", "otherTaxOffset", "helpDebt", "afsDebt", "stslDebt", "isExemptFromFloodLevy", "hasApprovedWorkingHolidayVisa", "workingHolidayVisaCountry", "isSeasonalWorker", "hasWithholdingVariation", "dateTaxFileDeclarationSigned", "employmentAgreement", "isExemptFromPayrollTax", "bankAccount1_BSB", "bankAccount2_BSB", "bankAccount3_BSB", "superFund1_ProductCode", "superFund1_FundName", "superFund1_MemberNumber", "superFund1_AllocatedPercentage", "superFund1_FixedAmount", "superFund1_EmployerNominatedFund", "superFund2_ProductCode", "superFund2_FundName", "superFund2_MemberNumber", "superFund2_AllocatedPercentage", "superFund2_FixedAmount", "superFund2_EmployerNominatedFund", "superFund3_ProductCode", "superFund3_FundName", "superFund3_MemberNumber", "superFund3_AllocatedPercentage", "superFund3_FixedAmount", "superFund3_EmployerNominatedFund", "superThresholdAmount", "medicareLevyExemption", "closelyHeldEmployee", "singleTouchPayroll", "taxCategory", "claimMedicareLevyReduction", "medicareLevyReductionSpouse", "rosteringNotificationChoices", "leaveAccrualStartDateType", "mobilePhone", "Id", "BusinessId", "KeyPayOrganisationId"}),
+		    #"Split Column by Delimiter" = Table.SplitColumn(#"Removed Columns", "locations", Splitter.SplitTextByDelimiter("|", QuoteStyle.Csv), {"locations.1", "locations.2", "locations.3", "locations.4", "locations.5", "locations.6", "locations.7", "locations.8", "locations.9", "locations.10", "locations.11", "locations.12", "locations.13", "locations.14", "locations.15", "locations.16", "locations.17", "locations.18", "locations.19", "locations.20", "locations.21", "locations.22", "locations.23", "locations.24", "locations.25", "locations.26", "locations.27", "locations.28", "locations.29", "locations.30", "locations.31", "locations.32"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"locations.1", type text}, {"locations.2", type text}, {"locations.3", type text}, {"locations.4", type text}, {"locations.5", type text}, {"locations.6", type text}, {"locations.7", type text}, {"locations.8", type text}, {"locations.9", type text}, {"locations.10", type text}, {"locations.11", type text}, {"locations.12", type text}, {"locations.13", type text}, {"locations.14", type text}, {"locations.15", type text}, {"locations.16", type text}, {"locations.17", type text}, {"locations.18", type text}, {"locations.19", type text}, {"locations.20", type text}, {"locations.21", type text}, {"locations.22", type text}, {"locations.23", type text}, {"locations.24", type text}, {"locations.25", type text}, {"locations.26", type text}, {"locations.27", type text}, {"locations.28", type text}, {"locations.29", type text}, {"locations.30", type text}, {"locations.31", type text}, {"locations.32", type text}}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Changed Type", {"employeeId", "title", "preferredName", "firstName", "middleName", "surname", "startDate", "endDate", "LastUpdatedDateTimeUtc"}, "Attribute", "Value"),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Unpivoted Columns",{"Attribute", "title", "preferredName", "firstName", "middleName", "surname", "startDate", "endDate", "LastUpdatedDateTimeUtc"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns1",{{"employeeId", "Employee ID"}, {"Value", "Location"}}),
+		    #"Duplicated Column" = Table.DuplicateColumn(#"Renamed Columns", "Employee ID", "Employee ID - Copy"),
+		    #"Merged Queries" = Table.NestedJoin(#"Duplicated Column", {"Location"}, KP_Locations, {"fullyQualifiedName"}, "KeyPayLocations", JoinKind.LeftOuter),
+		    #"Expanded KeyPayLocations" = Table.ExpandTableColumn(#"Merged Queries", "KeyPayLocations", {"locationId"}, {"KeyPayLocations.locationId"}),
+		    #"Duplicated Column1" = Table.DuplicateColumn(#"Expanded KeyPayLocations", "KeyPayLocations.locationId", "KeyPayLocations.locationId - Copy"),
+		    #"Merged Columns" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column1", {{"Employee ID - Copy", type text}, {"KeyPayLocations.locationId", type text}}, "en-AU"),{"Employee ID - Copy", "KeyPayLocations.locationId"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"EmployeeAndLocationID"),
+		    #"Merged Queries1" = Table.NestedJoin(#"Merged Columns", {"EmployeeAndLocationID"}, KP_Timesheets, {"EmployeeAndLocationID"}, "KeyPayTimesheets", JoinKind.LeftOuter),
+		    #"Expanded KeyPayTimesheets" = Table.ExpandTableColumn(#"Merged Queries1", "KeyPayTimesheets", {"startTime"}, {"KeyPayTimesheets.endTime"}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded KeyPayTimesheets",{{"KeyPayTimesheets.endTime", type date}}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type1",{{"KeyPayTimesheets.endTime", "Timesheet Date"}, {"KeyPayLocations.locationId - Copy", "LocationID"}}),
+		    #"Duplicated Column2" = Table.DuplicateColumn(#"Renamed Columns1", "Employee ID", "Employee ID - Copy"),
+		    #"Duplicated Column3" = Table.DuplicateColumn(#"Duplicated Column2", "Timesheet Date", "Timesheet Date - Copy"),
+		    #"Merged Columns1" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column3", {{"Timesheet Date - Copy", type text}, {"Employee ID - Copy", type text}}, "en-AU"),{"Timesheet Date - Copy", "Employee ID - Copy"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"EmployeeDateID"),
+		    #"Duplicated Column4" = Table.DuplicateColumn(#"Merged Columns1", "LocationID", "LocationID - Copy"),
+		    #"Duplicated Column5" = Table.DuplicateColumn(#"Duplicated Column4", "Timesheet Date", "Timesheet Date - Copy"),
+		    #"Merged Columns2" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column5", {{"Timesheet Date - Copy", type text}, {"LocationID - Copy", type text}}, "en-AU"),{"Timesheet Date - Copy", "LocationID - Copy"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"LocationAndDateID"),
+		    #"Duplicated Column6" = Table.DuplicateColumn(#"Merged Columns2", "LocationID", "LocationID - Copy"),
+		    #"Duplicated Column7" = Table.DuplicateColumn(#"Duplicated Column6", "EmployeeDateID", "EmployeeDateID - Copy"),
+		    #"Merged Columns3" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column7", {{"LocationID - Copy", type text}}, "en-AU"),{"LocationID - Copy", "EmployeeDateID - Copy"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"EmployeeDateLocation")
+		in
+		    #"Merged Columns3"
+	lineageTag: a5544a95-0f11-4d56-baf2-9c1680b0eb9d
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Monthly WHPB_2025' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Budgets/Wage%20Related%20Budget.xlsx"), null, true),
+		    #"Monthly WHPB_Sheet" = Source{[Item="Monthly WHPB",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Monthly WHPB_Sheet", [PromoteAllScalars=true]),
+		    #"Added Custom" = Table.AddColumn(#"Promoted Headers", "Metric Name", each "Monthly WHPB"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Column1", "Service"}, {"Column2", "Metric"}}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Renamed Columns", {"Service", "Metric", "Metric Name"}, "Attribute", "Value"),
+		    #"Removed Columns" = Table.RemoveColumns(#"Unpivoted Columns",{"Metric"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Attribute", type date}, {"Value", type number}, {"Metric Name", type text}, {"Service", type text}}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type",{{"Attribute", "Month"}})
+		in
+		    #"Renamed Columns1"
+	lineageTag: 88602b1a-2860-43e8-9da4-49cdc8fede43
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Weekly WHPB_2025' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Budgets/Wage%20Related%20Budget.xlsx"), null, true),
+		    #"Weekly WHPB_Sheet" = Source{[Item="Weekly WHPB",Kind="Sheet"]}[Data],
+		    #"Removed Top Rows" = Table.Skip(#"Weekly WHPB_Sheet",1),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Top Rows", [PromoteAllScalars=true]),
+		    #"Added Custom" = Table.AddColumn(#"Promoted Headers", "Metric Name", each "Weekly WHPB"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Column1", "Service"}, {"Column2", "Metric"}}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Renamed Columns", {"Service", "Metric", "Metric Name"}, "Attribute", "Value"),
+		    #"Removed Columns" = Table.RemoveColumns(#"Unpivoted Columns",{"Metric"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns",{{"Attribute", "Week End Date"}, {"Metric Name", "Metric"}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Service", type text}, {"Metric", type text}, {"Week End Date", type date}, {"Value", type number}})
+		in
+		    #"Changed Type"
+	lineageTag: ee93e72a-ebf5-48f5-8ff5-a0be53d932b1
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Weekly_OccupancyAndRevenue =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Occupancy%20and%20Revenue/Occupancy%20and%20Revenue.xlsx"), null, true),
+		    Data_Sheet = Source{[Item="Weekly",Kind="Sheet"]}[Data],
+		    #"Removed Top Rows" = Table.Skip(Data_Sheet,1),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Top Rows", [PromoteAllScalars=true]),
+		    #"Renamed Columns" = Table.RenameColumns(#"Promoted Headers",{{"Column1", "Service"}, {"Column2", "Metric"}}),
+		    #"Filled Down" = Table.FillDown(#"Renamed Columns",{"Service"}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Filled Down", {"Service", "Metric"}, "Attribute", "Value"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Unpivoted Columns",{"Service", "Attribute", "Metric", "Value"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Reordered Columns",{{"Attribute", "Week End Date"}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Metric", type text}, {"Value", type number}, {"Week End Date", type date}, {"Service", type text}})
+		in
+		    #"Changed Type"
+	lineageTag: 6acb7b09-16e5-4f52-b603-0d02094bf0bc
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Monthly_WagesRev_2025 =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Budgets/Wage%20Related%20Budget.xlsx"), null, true),
+		    #"Monthly Wages % Rev_Sheet" = Source{[Item="Monthly Wages % Rev",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Monthly Wages % Rev_Sheet", [PromoteAllScalars=true]),
+		    #"Added Custom" = Table.AddColumn(#"Promoted Headers", "Metric Name", each "Monthly Wages % Rev"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Column1", "Service"}, {"Column2", "Metric"}}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Renamed Columns", {"Service", "Metric", "Metric Name"}, "Attribute", "Value"),
+		    #"Removed Columns" = Table.RemoveColumns(#"Unpivoted Columns",{"Metric"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns",{{"Attribute", "Month"}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Value", type number}, {"Month", type date}, {"Metric Name", type text}, {"Service", type text}})
+		in
+		    #"Changed Type"
+	lineageTag: 97177e60-d3f0-483d-89dc-b252828ffb22
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_LeaveHistoryDetailReport =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayLeaveHistoryDetailReport = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayLeaveHistoryDetailReport"]}[Data]
+		in
+		    dbo_KeyPayLeaveHistoryDetailReport
+	lineageTag: 758d166d-3f20-4da6-8701-9fa996c8728c
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_LeaveHistoryReport =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayLeaveHistoryReport = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayLeaveHistoryReport"]}[Data]
+		in
+		    dbo_KeyPayLeaveHistoryReport
+	lineageTag: 99954d8b-f0b0-485f-9852-c42e09adc46d
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_PayGAdjustments =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayGAdjustments = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayGAdjustments"]}[Data]
+		in
+		    dbo_KeyPayPayGAdjustments
+	lineageTag: 0b2295ce-306b-485a-812b-210947aee298
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_PayRateTemplatePayCategories =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayRateTemplatePayCategories = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayRateTemplatePayCategories"]}[Data]
+		in
+		    dbo_KeyPayPayRateTemplatePayCategories
+	lineageTag: f5102387-3b7f-4ea7-92d7-d797033b8921
+	queryGroup: KeyPay
+
+	annotation PBI_ResultType = Table
+
+expression KP_PayRateTemplates =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayRateTemplates = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayRateTemplates"]}[Data]
+		in
+		    dbo_KeyPayPayRateTemplates
+	lineageTag: 5fd53f4f-82f1-4a5d-aacf-d088a2e76e4d
+	queryGroup: KeyPay
+
+	annotation PBI_ResultType = Table
+
+expression 'Xero_Bank Transactions' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_BankTransactions = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="BankTransactions"]}[Data],
+		    #"Reordered Columns" = Table.ReorderColumns(dbo_BankTransactions,{"banktransactionid", "contact_contactid", "contact_name", "bankaccount_accountid", "bankaccount_name", "date", "subtotal", "total", "totaltax", "banktransactiontypedescribed", "bankaccount_code", "contact_hasvalidationerrors", "currencycode", "currencyrate", "dateint", "datestring", "hasattachments", "isreconciled", "lineamounttypes", "reference", "status", "type", "updateddateutc", "Id", "XeroOrganisationId", "LastUpdatedDateTimeUtc", "prepaymentid", "overpaymentid"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"banktransactionid", "Bank Transacton ID"}, {"contact_contactid", "Contact ID"}, {"bankaccount_accountid", "Account ID"}, {"date", "Date"}, {"subtotal", "Sub-Total"}, {"total", "Total"}, {"totaltax", "Total Tax"}, {"banktransactiontypedescribed", "Transaction Type"}, {"contact_name", "Contact Name"}, {"bankaccount_name", "Account Name"}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"bankaccount_code", "contact_hasvalidationerrors", "currencycode", "currencyrate", "dateint", "datestring", "hasattachments", "isreconciled", "lineamounttypes", "reference", "status", "type", "updateddateutc", "Id", "XeroOrganisationId", "LastUpdatedDateTimeUtc", "prepaymentid", "overpaymentid"})
+		in
+		    #"Removed Columns"
+	lineageTag: 52f0168a-ca5e-4045-92ef-4389de340d56
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Xero_Invoices =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_Invoices = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="Invoices"]}[Data],
+		    #"Reordered Columns" = Table.ReorderColumns(dbo_Invoices,{"invoiceid", "invoicenumber", "amountdue", "amountpaid", "amountcredited", "payments_amount", "subtotal", "total", "totaltax","date", "status", "contact_contactid", "contact_name", "brandingthemeid", "contact_hasvalidationerrors", "creditnotes_total", "currencycode", "currencyrate", "dateint", "datestring", "duedate", "duedateint", "duedatestring", "fullypaidondate", "hasattachments", "haserrors", "isdiscounted", "TotalDiscount", "lineamounttypes",  "reference", "senttocontact",  "type", "invoicetypedescribed", "updateddateutc", "expectedpaymentdate", "plannedpaymentdate", "Id", "XeroOrganisationId", "LastUpdatedDateTimeUtc", "Url"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"invoiceid", "Invoice ID"}, {"amountdue", "Amount Due"}, {"amountpaid", "Amount Paid"}, {"amountcredited", "Amount Credited"}, {"date", "Invoice Date"}, {"contact_contactid", "Contact ID"}, {"contact_name", "Contact Name"}, {"payments_amount", "Payments Amount"}, {"subtotal", "Sub-Total"}, {"total", "Total"}, {"totaltax", "Tax"}, {"invoicenumber", "Invoice Number"}})
+		in
+		    #"Renamed Columns"
+	lineageTag: 30000a0c-38c5-4092-bb87-310658b701ef
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Xero_Expenses =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_XeroConsolidationProfitAndLossGroupReportView = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="XeroConsolidationProfitAndLossGroupReportView"]}[Data],
+		    #"Filtered Rows" = Table.SelectRows(dbo_XeroConsolidationProfitAndLossGroupReportView, each ([AccountType] = "Expense"))
+		in
+		    #"Filtered Rows"
+	lineageTag: 1946cf91-32da-4125-aa9b-84910b8de31f
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Xero_Budget Line Balances' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_XeroBudgetLineBalances = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="XeroBudgetLineBalances"]}[Data]
+		in
+		    dbo_XeroBudgetLineBalances
+	lineageTag: ffa5577c-210b-4fe3-9f4b-c315b90d09c8
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Monthly CCE_2025' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Controllable%20Cost%20Budget/Controllable%20Cost%20Budget.xlsx"), null, true),
+		    #"Removed Columns" = Table.RemoveColumns(Source,{"Name", "Item", "Kind", "Hidden"}),
+		    #"Expanded Data" = Table.ExpandTableColumn(#"Removed Columns", "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "Column12", "Column13", "Column14"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.Column12", "Data.Column13", "Data.Column14"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Filled Down" = Table.FillDown(#"Promoted Headers",{"Column1"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Filled Down", each [Column2] <> null and [Column2] <> ""),
+		    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"Column1", "Service"}, {"Column2", "Metric Name"}}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Renamed Columns", {"Service", "Metric Name"}, "Attribute", "Value"),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Month"}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Month", type date}, {"Value", type number}, {"Metric Name", type text}, {"Service", type text}})
+		in
+		    #"Changed Type"
+	lineageTag: 48529f33-fb26-4e77-9e30-7c2bb0d4db0c
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_LeaveCategories =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayLeaveCategories = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayLeaveCategories"]}[Data]
+		in
+		    dbo_KeyPayLeaveCategories
+	lineageTag: ecade1d7-fad7-44da-9676-a14a75a3a363
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_EmployeeLeaveBalance =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayEmployeeLeaveBalance = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayEmployeeLeaveBalance"]}[Data]
+		in
+		    dbo_KeyPayEmployeeLeaveBalance
+	lineageTag: 9adaefb1-dd8e-4267-9b4f-c800bec201be
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_EmployingEntities =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayEmployingEntities = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayEmployingEntities"]}[Data]
+		in
+		    dbo_KeyPayEmployingEntities
+	lineageTag: 3d5c026f-469b-4c90-97fb-3596cb3d6277
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Monthly_OccupancyAndRevenue =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Occupancy%20and%20Revenue/Occupancy%20and%20Revenue.xlsx"), null, true),
+		    Monthly_Sheet = Source{[Item="Monthly",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(Monthly_Sheet, [PromoteAllScalars=true]),
+		    #"Filled Down" = Table.FillDown(#"Promoted Headers",{"Column1"}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Filled Down", {"Column1", "Column2"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Month"}, {"Column1", "Service"}, {"Column2", "Metric Name"}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Month", type date}, {"Value", type number}, {"Service", type text}, {"Metric Name", type text}})
+		in
+		    #"Changed Type"
+	lineageTag: 6fd38135-be80-423f-8c28-382a8b1470ba
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KidzBiz OSCH' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Survey_%20Kidzbiz%20OSHC(1-49)%20(1).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "Column12", "Column13", "Column14", "Column15", "ID", "Start time", "Completion time", "Email", "Name", "Which Kidzbiz service is your child enrolled in?", "#(lf)Which age group does your child/ren belong to? (you can make multiple selections if you have more than one child enrolled)", "Does your child/ren attend Kidzbiz vacation care program?", "How long have you been utilising KidzBiz?", "On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's social and emotional wellbeing since enrolling in Kidzbiz?", "Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.Column12", "Data.Column13", "Data.Column14", "Data.Column15", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.Which Kidzbiz service is your child enrolled in?", "Data.#(lf)Which age group does your child/ren belong to? (you can make multiple sele", "Data.Does your child/ren attend Kidzbiz vacation care program?", "Data.How long have you been utilising KidzBiz?", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Kid", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's social and emo", "Data.Are there any specific aspects of Kidzbiz that you believe could be improve", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"Which Kidzbiz service is your child enrolled in?", type text}, {"#(lf)Which age group does your child/ren belong to? (you can make multiple selections if you have more than one child enrolled)", type text}, {"Does your child/ren attend Kidzbiz vacation care program?", type text}, {"How long have you been utilising KidzBiz?", type text}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's social and emotional wellbeing since enrolling in Kidzbiz?", type text}, {"Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column17", Int64.Type}, {"Column18", type datetime}, {"Column19", type datetime}, {"Column20", type text}, {"Column21", type any}, {"Column22", type text}, {"Column23", type text}, {"Column24", type text}, {"Column25", type text}, {"Column26", Int64.Type}, {"Column27", Int64.Type}, {"Column28", type text}, {"Column29", type text}, {"Column30", Int64.Type}, {"Column31", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1"}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Removed Columns",";","",Replacer.ReplaceText,{"Which Kidzbiz service is your child enrolled in?"}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value"," Primary","",Replacer.ReplaceText,{"Which Kidzbiz service is your child enrolled in?"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Lake Joondalup Baptist College","LJBC",Replacer.ReplaceText,{"Which Kidzbiz service is your child enrolled in?"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Replaced Value2",{{"Which Kidzbiz service is your child enrolled in?", "Service"}}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Renamed Columns",49),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Removed Bottom Rows",{"Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Column24", "Column25", "Column26", "Column27", "Column28", "Column29", "Column30", "Column31", "Sheet1_1", "Sheet", "false"}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Columns1", {"ID", "Start time", "Completion time", "Email", "Name", "Service"}, "Attribute", "Value"),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Renamed Columns1","Beaumaris","SR Beaumaris",Replacer.ReplaceText,{"Service"})
+		in
+		    #"Replaced Value3"
+	lineageTag: 2ee1026d-235e-43bd-ae04-e58567a60ace
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'VEL White Gum Valley' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Survey_%20Village%20Early%20Learning,%20White%20Gum%20Valley%C2%A0(1-37)%20(3).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Early Learning?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling in Village Early Learning?", "Are there any specific aspects of Village Early Learning that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Vil", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Village Early Learning that you believe c", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Removed Columns" = Table.RemoveColumns(#"Promoted Headers",{"Sheet1", "Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Added Custom" = Table.AddColumn(#"Removed Columns", "Service", each "White Gum Valley"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Early Learning?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling in Village Early Learning?", "Are there any specific aspects of Village Early Learning that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Reordered Columns",37),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Bottom Rows", {"ID", "Start time", "Completion time", "Email", "Name", "Service"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}})
+		in
+		    #"Renamed Columns"
+	lineageTag: db15a055-b3e1-4725-9e87-fd7d6f218dac
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Karrinyup =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Voice%20_%20Survey%20_%20Karrinyup(1-19).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Karrinyup?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling at Village Karrinyup?", "Are there any specific aspects of Village Karrinyup that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Vil", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Village Karrinyup that you believe could ", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Village Karrinyup?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling at Village Karrinyup?", type text}, {"Are there any specific aspects of Village Karrinyup that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column13", Int64.Type}, {"Column14", type datetime}, {"Column15", type datetime}, {"Column16", type text}, {"Column17", type any}, {"Column18", Int64.Type}, {"Column19", Int64.Type}, {"Column20", type text}, {"Column21", type text}, {"Column22", Int64.Type}, {"Column23", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1"}),
+		    #"Added Custom" = Table.AddColumn(#"Removed Columns", "Service", each "Karrinyup"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Karrinyup?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling at Village Karrinyup?", "Are there any specific aspects of Village Karrinyup that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?", "Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Reordered Columns",{"Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Columns1",19),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Bottom Rows", {"ID", "Start time", "Completion time", "Email", "Name", "Service"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}})
+		in
+		    #"Renamed Columns"
+	lineageTag: 880194e5-85de-4e5f-bc4a-58b37415fde7
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Smileys OSCH' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Voice_%20Smileys%20OSC(1-12)%20(2).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Smiley's Out of School Care?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling in Smiley's Out of School Care?", "Are there any specific aspects of Smiley's Out of School Care that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Smi", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Smiley's Out of School Care that you beli", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Smiley's Out of School Care?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling in Smiley's Out of School Care?", type text}, {"Are there any specific aspects of Smiley's Out of School Care that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column13", Int64.Type}, {"Column14", type datetime}, {"Column15", type datetime}, {"Column16", type text}, {"Column17", type any}, {"Column18", Int64.Type}, {"Column19", Int64.Type}, {"Column20", type text}, {"Column21", type text}, {"Column22", Int64.Type}, {"Column23", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1"}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Columns",12),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Removed Bottom Rows",{"Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Added Custom" = Table.AddColumn(#"Removed Columns1", "Service", each "Beaconsfield"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "On a scale of 1 to 5, how satisfied are you with the overall quality of Smiley's Out of School Care?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling in Smiley's Out of School Care?", "Are there any specific aspects of Smiley's Out of School Care that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Reordered Columns", {"ID", "Start time", "Completion time", "Email", "Name", "Service"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}})
+		in
+		    #"Renamed Columns"
+	lineageTag: 3132fbd2-5ecf-4734-bddb-ad4cac155b90
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'VEL Stirling' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Voice_%20The%20Village%20Early%20Learning%20Stirling%C2%A0(1-27).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Stirling?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling at Village Stirling?", "Are there any specific aspects of Village Stirling that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Vil", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Village Stirling that you believe could b", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Village Stirling?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling at Village Stirling?", type text}, {"Are there any specific aspects of Village Stirling that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column13", Int64.Type}, {"Column14", type datetime}, {"Column15", type datetime}, {"Column16", type text}, {"Column17", type any}, {"Column18", Int64.Type}, {"Column19", Int64.Type}, {"Column20", type text}, {"Column21", type text}, {"Column22", Int64.Type}, {"Column23", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1", "Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Columns", {"ID", "Start time", "Completion time", "Email", "Name"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}}),
+		    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Service", each "Stirling"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "Question", "Answer"})
+		in
+		    #"Reordered Columns"
+	lineageTag: 6123c0a5-5a46-4a9e-817d-9545e66fa766
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'VEL Claremont' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Voice_%20Village%20Early%20Learning%20Claremont(1-17).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Claremont?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling at Village Claremont?", "Are there any specific aspects of Village Claremont that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Vil", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Village Claremont that you believe could ", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Removed Columns" = Table.RemoveColumns(#"Promoted Headers",{"Sheet1", "Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Columns",17),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Bottom Rows", {"ID", "Start time", "Completion time", "Email", "Name"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}}),
+		    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Service", each "Claremont"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "Question", "Answer"})
+		in
+		    #"Reordered Columns"
+	lineageTag: 667656cb-6758-4c9d-8d26-87dd87e795cb
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'VEL Harrisdale' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Voice_%20Village%20Early%20Learning%20Harrisdale(1-28)%20(1).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Harrisdale Early Learning?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling at Harrisdale Early Learning?", "Are there any specific aspects of Harrisdale Early Learning that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Har", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Harrisdale Early Learning that you believ", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Harrisdale Early Learning?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling at Harrisdale Early Learning?", type text}, {"Are there any specific aspects of Harrisdale Early Learning that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column13", Int64.Type}, {"Column14", type datetime}, {"Column15", type datetime}, {"Column16", type text}, {"Column17", type any}, {"Column18", Int64.Type}, {"Column19", Int64.Type}, {"Column20", type text}, {"Column21", type text}, {"Column22", Int64.Type}, {"Column23", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1", "Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Columns",28),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Bottom Rows", {"ID", "Start time", "Completion time", "Email", "Name"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}}),
+		    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Service", each "Harrisdale"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "Question", "Answer"})
+		in
+		    #"Reordered Columns"
+	lineageTag: 12877375-f21f-4719-a9d8-a426f9b70515
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'VEL Piara Waters' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Voice_%20Village%20Early%20Learning,%20Piara%20Waters%C2%A0(1-36)%20(2).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "ID", "Start time", "Completion time", "Email", "Name", "On a scale of 1 to 5, how satisfied are you with the overall quality of Village Early Learning?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling at Village Early Learning?", "Are there any specific aspects of Village Early Learning that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Vil", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Village Early Learning that you believe c", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Village Early Learning?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling at Village Early Learning?", type text}, {"Are there any specific aspects of Village Early Learning that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column13", Int64.Type}, {"Column14", type datetime}, {"Column15", type datetime}, {"Column16", type text}, {"Column17", type any}, {"Column18", Int64.Type}, {"Column19", Int64.Type}, {"Column20", type text}, {"Column21", type text}, {"Column22", Int64.Type}, {"Column23", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1", "Column13", "Column14", "Column15", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Sheet1_1", "Sheet", "false"}),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Columns",36),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Bottom Rows", {"ID", "Start time", "Completion time", "Email", "Name"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}}),
+		    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Service", each "Piara Waters"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"ID", "Start time", "Completion time", "Email", "Name", "Service", "Question", "Answer"})
+		in
+		    #"Reordered Columns"
+	lineageTag: 7a98fd63-e045-4370-b565-88f2995f8f32
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KidzBiz LDC_' =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Survey_%20Kidzbiz%20LDC(1-58)%20(2).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "Column12", "Column13", "Column14", "ID", "Start time", "Completion time", "Email", "Name", "Which Kidzbiz service is your child enrolled in?", "What room/s is your child/ren enrolled in? (you can make multiple selections if you have more then one child enrolled)", "How long have you been utilising Kidzbiz?", "On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling in Kidzbiz?", "Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.Column12", "Data.Column13", "Data.Column14", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.Which Kidzbiz service is your child enrolled in?", "Data.What room/s is your child/ren enrolled in? (you can make multiple selection", "Data.How long have you been utilising Kidzbiz?", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Kid", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's development si", "Data.Are there any specific aspects of Kidzbiz that you believe could be improve", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"Which Kidzbiz service is your child enrolled in?", type text}, {"What room/s is your child/ren enrolled in? (you can make multiple selections if you have more then one child enrolled)", type text}, {"How long have you been utilising Kidzbiz?", type text}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling in Kidzbiz?", type text}, {"Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column16", Int64.Type}, {"Column17", type datetime}, {"Column18", type datetime}, {"Column19", type text}, {"Column20", type any}, {"Column21", type text}, {"Column22", type text}, {"Column23", type text}, {"Column24", Int64.Type}, {"Column25", Int64.Type}, {"Column26", type text}, {"Column27", type text}, {"Column28", Int64.Type}, {"Column29", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Sheet1", "Email", "Name", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Column24", "Column25", "Column26", "Column27", "Column28", "Column29", "Sheet1_1", "Sheet", "false"}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Removed Columns",";","",Replacer.ReplaceText,{"Which Kidzbiz service is your child enrolled in?"}),
+		    #"Removed Blank Rows" = Table.SelectRows(#"Replaced Value", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+		    #"Split Column by Delimiter" = Table.SplitColumn(#"Removed Blank Rows", "What room/s is your child/ren enrolled in? (you can make multiple selections if you have more then one child enrolled)", Splitter.SplitTextByDelimiter(";", QuoteStyle.Csv), {"What room/s is your child/ren enrolled in? (you can make multiple selections if ", "What room/s is your child/ren enrolled in? (you can make multiple selections i.1", "What room/s is your child/ren enrolled in? (you can make multiple selections i.2"}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"What room/s is your child/ren enrolled in? (you can make multiple selections if ", type text}, {"What room/s is your child/ren enrolled in? (you can make multiple selections i.1", type text}, {"What room/s is your child/ren enrolled in? (you can make multiple selections i.2", type text}}),
+		    #"Split Column by Delimiter1" = Table.SplitColumn(#"Changed Type1", "How long have you been utilising Kidzbiz?", Splitter.SplitTextByDelimiter(";", QuoteStyle.Csv), {"How long have you been utilising Kidzbiz?.1", "How long have you been utilising Kidzbiz?.2", "How long have you been utilising Kidzbiz?.3", "How long have you been utilising Kidzbiz?.4", "How long have you been utilising Kidzbiz?.5"}),
+		    #"Changed Type2" = Table.TransformColumnTypes(#"Split Column by Delimiter1",{{"How long have you been utilising Kidzbiz?.1", type text}, {"How long have you been utilising Kidzbiz?.2", type text}, {"How long have you been utilising Kidzbiz?.3", type text}, {"How long have you been utilising Kidzbiz?.4", type text}, {"How long have you been utilising Kidzbiz?.5", type text}}),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Changed Type2",{"What room/s is your child/ren enrolled in? (you can make multiple selections i.2", "How long have you been utilising Kidzbiz?.5"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns1",{{"Which Kidzbiz service is your child enrolled in?", "Service"}, {"What room/s is your child/ren enrolled in? (you can make multiple selections if ", "Room"}}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Renamed Columns", {"ID", "Start time", "Completion time", "Service", "How long have you been utilising Kidzbiz?.1", "How long have you been utilising Kidzbiz?.2", "How long have you been utilising Kidzbiz?.3", "How long have you been utilising Kidzbiz?.4", "On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's development since enrolling in Kidzbiz?", "Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, "Attribute", "Value"),
+		    #"Filtered Rows" = Table.SelectRows(#"Unpivoted Columns", each [Value] <> null and [Value] <> ""),
+		    #"Removed Columns2" = Table.RemoveColumns(#"Filtered Rows",{"Attribute"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns2",{{"Value", "Room"}}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Renamed Columns1","",null,Replacer.ReplaceValue,{"How long have you been utilising Kidzbiz?.1", "How long have you been utilising Kidzbiz?.2", "How long have you been utilising Kidzbiz?.3", "How long have you been utilising Kidzbiz?.4"}),
+		    #"Added Custom" = Table.AddColumn(#"Replaced Value1", "Custom", each List.First(List.RemoveNulls({[#"How long have you been utilising Kidzbiz?.4"], [#"How long have you been utilising Kidzbiz?.3"], [#"How long have you been utilising Kidzbiz?.2"], [#"How long have you been utilising Kidzbiz?.1"]}))),
+		    #"Renamed Columns2" = Table.RenameColumns(#"Added Custom",{{"Custom", "Time at Service"}}),
+		    #"Removed Columns3" = Table.RemoveColumns(#"Renamed Columns2",{"How long have you been utilising Kidzbiz?.1", "How long have you been utilising Kidzbiz?.2", "How long have you been utilising Kidzbiz?.3", "How long have you been utilising Kidzbiz?.4"}),
+		    #"Renamed Columns3" = Table.RenameColumns(#"Removed Columns3",{{"On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "Overall Quality"}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Communication"}, {"Have you noticed any improvements or changes in your child's development since enrolling in Kidzbiz?", "Improvements or Changes in Child"}, {"Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", "Service Improvements"}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Recommendation"}, {"Do you have any other comments or suggestions?", "Comments"}}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns3",{"ID", "Start time", "Completion time", "Service", "Room", "Time at Service", "Overall Quality", "Communication", "Improvements or Changes in Child", "Service Improvements", "Recommendation", "Comments"})
+		in
+		    #"Reordered Columns"
+	lineageTag: 191b4653-5774-4700-8b6f-b9336ac044ec
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Xero_Profit & Loss Report' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_XeroConsolidationProfitAndLossGroupReportView = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="XeroConsolidationProfitAndLossGroupReportView"]}[Data],
+		    #"Removed Columns" = Table.RemoveColumns(dbo_XeroConsolidationProfitAndLossGroupReportView,{"RecordType", "XeroConsolidationGroupId", "XeroConsolidationGroupName", "XeroOrganisationId", "XeroOrganisationName", "AccountTypeId", "AccountOrderNumber", "AccountDebitType", "TrackingCategoryId", "TrackingCategoryName", "AccountGroupId", "ParentAccountGroupId"})
+		in
+		    #"Removed Columns"
+	lineageTag: 4b80eef6-f22b-4c90-b66a-92fb31269c39
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Xero_CCE =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_XeroConsolidationProfitAndLossGroupReportView = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="XeroConsolidationProfitAndLossGroupReportView"]}[Data],
+		    #"Reordered Columns" = Table.ReorderColumns(dbo_XeroConsolidationProfitAndLossGroupReportView,{"Date", "TrackingCategoryOption", "AccountId", "AccountName", "AccountCode", "RecordType", "XeroConsolidationGroupId", "XeroConsolidationGroupName", "XeroOrganisationId", "XeroOrganisationName", "AccountTypeId", "AccountOrderNumber", "AccountType", "TrackingCategoryId", "TrackingCategoryName", "AccountGroupId", "AccountGroupName", "ParentAccountGroupId", "ParentAccountGroupName", "Amount", "CombinedPreElimAmount", "AutoEliminationAmount", "ConsolidationJournalsAmount", "ConsolidatedAmount"}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Reordered Columns",{"RecordType", "XeroConsolidationGroupId", "XeroConsolidationGroupName", "XeroOrganisationId", "XeroOrganisationName", "AccountTypeId", "AccountOrderNumber", "AccountType", "TrackingCategoryId", "TrackingCategoryName", "AccountGroupId", "AccountGroupName", "ParentAccountGroupId", "ParentAccountGroupName"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Columns", each ([AccountCode] = "5-000" or [AccountCode] = "5-000.1" or [AccountCode] = "5-001" or [AccountCode] = "5-002" or [AccountCode] = "5-004.1" or [AccountCode] = "5-005" or [AccountCode] = "5-100" or [AccountCode] = "7-021" or [AccountCode] = "7-021.1" or [AccountCode] = "7-021.2"))
+		in
+		    #"Filtered Rows"
+	lineageTag: fce55737-9fee-4615-9cee-9eb006d651dc
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Errors in Targets_Weekly' =
+		let
+		Source = Targets_Weekly,
+		  #"Detected Type Mismatches" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Source, Table.ColumnsOfType(Source, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "The type of the value does not match the type of the column.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Source, pairs),
+		  #"Added Index" = Table.AddIndexColumn(#"Detected Type Mismatches", "Row Number" ,1),
+		  #"Kept Errors" = Table.SelectRowsWithErrors(#"Added Index", {"Service", "Week End Date", "Metric", "Value"}),
+		  #"Reordered Columns" = Table.ReorderColumns(#"Kept Errors", {"Row Number", "Service", "Week End Date", "Metric", "Value"}),
+		    Value = #"Reordered Columns"{0}[Value]
+		in
+		  Value
+	lineageTag: ed915a0c-0e73-4031-93d9-5d896a42239d
+	queryGroup: 'Query Errors - 2/05/2025 2:34:51 PM'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
+expression KS_Balances =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftBalances = Source{[Schema="dbo",Item="KidsoftBalances"]}[Data]
+		in
+		    dbo_KidsoftBalances
+	lineageTag: e94db4ce-8ee3-451e-8989-ffd5dfb7971f
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_Bookings =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftBookings = Source{[Schema="dbo",Item="KidsoftBookings"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KidsoftBookings,{{"Date", type date}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Id"}),
+		    #"Removed Duplicates" = Table.Distinct(#"Removed Columns", {"BookingID"})
+		in
+		    #"Removed Duplicates"
+	lineageTag: 3492ce8a-665a-4659-9768-eff2b6d891e6
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_DetailedBalances =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftDetailedBalances = Source{[Schema="dbo",Item="KidsoftDetailedBalances"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KidsoftDetailedBalances,{{"BalanceDate", type date}, {"PostedToDate", type date}, {"LastUpdatedDateTimeUtc", type date}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Id"})
+		in
+		    #"Removed Columns"
+	lineageTag: 71966fe2-5936-4f42-9da2-13f19537cfa6
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_EnrolmentBalances =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftEnrolmentBalances = Source{[Schema="dbo",Item="KidsoftEnrolmentBalances"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KidsoftEnrolmentBalances,{{"BalanceDate", type date}, {"LastUpdatedDateTimeUtc", type date}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Id"})
+		in
+		    #"Removed Columns"
+	lineageTag: cb44d771-e8d3-4d3e-a93c-baba9421abb5
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KP_Earnings Lines' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayEarningsLines = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayEarningsLines"]}[Data],
+		    #"Removed Columns" = Table.RemoveColumns(dbo_KeyPayEarningsLines,{"notes"})
+		in
+		    #"Removed Columns"
+	lineageTag: e16da15d-97eb-4ddf-b9d8-04abb6a49d05
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_BookingTypes =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftBookingTypes = Source{[Schema="dbo",Item="KidsoftBookingTypes"]}[Data]
+		in
+		    dbo_KidsoftBookingTypes
+	lineageTag: cc29f9d0-32b5-48b3-858f-6a6ab65ed841
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_CCMSPayments =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftCCMSPayments = Source{[Schema="dbo",Item="KidsoftCCMSPayments"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KidsoftCCMSPayments,{{"PaidDate", type date}, {"ProcessingDate", type date}, {"LastUpdatedDateTimeUtc", type date}})
+		in
+		    #"Changed Type"
+	lineageTag: 3716c895-465b-4b80-9746-b5e312619063
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KP_Pay Categories' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayCategories = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayCategories"]}[Data]
+		in
+		    dbo_KeyPayPayCategories
+	lineageTag: 69c069d4-3f32-4175-969d-54dbf5f16c53
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Payments =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayments = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayments"]}[Data]
+		in
+		    dbo_KeyPayPayments
+	lineageTag: 8b2f062a-7787-4ea1-966c-dbc75cb093ce
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Payslips =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPaySlips = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPaySlips"]}[Data]
+		in
+		    dbo_KeyPayPaySlips
+	lineageTag: a2af0870-5654-4ad7-bafb-5a1a3475b64a
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Kiosks =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayKiosks = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayKiosks"]}[Data]
+		in
+		    dbo_KeyPayKiosks
+	lineageTag: 8250df24-5d51-4858-8e2b-3ae6072c1937
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Employees =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayEmployees = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayEmployees"]}[Data]
+		in
+		    dbo_KeyPayEmployees
+	lineageTag: bbfa4e49-309e-4309-ab88-f0940f3e474d
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KS_SignIn Times' =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftBookingSignInOutTimes = Source{[Schema="dbo",Item="KidsoftBookingSignInOutTimes"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KidsoftBookingSignInOutTimes,{{"ServiceID", type text}, {"BookingID", type text}, {"Position", Int64.Type}, {"SignInTime", type time}, {"SignOutTime", type time}, {"Id", Int64.Type}, {"KidsoftOrganisationId", Int64.Type}, {"LastUpdatedDateTimeUtc", type datetime}})
+		in
+		    #"Changed Type"
+	lineageTag: e4090d2e-829c-421f-b049-50389c845952
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Journals =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayJournals = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayJournals"]}[Data]
+		in
+		    dbo_KeyPayJournals
+	lineageTag: 65e33be1-6026-47c0-a91e-daad7d42aa71
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Contractor_Hours =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Contractor%20Hours/Contractor%20hours.xlsx"), null, true),
+		    #"Removed Bottom Rows" = Table.RemoveLastN(Source,3),
+		    #"Expanded Data" = Table.ExpandTableColumn(#"Removed Bottom Rows", "Data", {"Column1", "Column2", "Column3", "Column4", "Column5"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Extracted First Characters" = Table.TransformColumns(#"Promoted Headers", {{"Sept 24", each Text.Start(_, 3), type text}}),
+		    #"Added Custom" = Table.AddColumn(#"Extracted First Characters", "Year", each 2024),
+		    #"Merged Columns" = Table.CombineColumns(Table.TransformColumnTypes(#"Added Custom", {{"Year", type text}}, "en-AU"),{"Sept 24", "Year"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"Month Year"),
+		    #"Removed Columns" = Table.RemoveColumns(#"Merged Columns",{"Sheet", "false"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Columns", each ([Category 1] <> null and [Category 1] <> "Category 1")),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows",{{"Quantity", type number}}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Category 1", "Service Name"}, {"Sept 24_1", "Month"}}),
+		    #"Trimmed Text" = Table.TransformColumns(#"Renamed Columns",{{"Service Name", Text.Trim, type text}}),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Trimmed Text",{"Month Year"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns1",{{"Month", "Month Year"}})
+		in
+		    #"Renamed Columns1"
+	lineageTag: 46075f56-98ff-4fb3-9d2c-055f7625111d
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_AttendanceSummaryForDate =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftAttendanceSummary = Source{[Schema="dbo",Item="KidsoftAttendanceSummary"]}[Data]
+		in
+		    dbo_KidsoftAttendanceSummary
+	lineageTag: c68325a3-7185-480c-84c9-ce0c656e8420
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_Children =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftChildren = Source{[Schema="dbo",Item="KidsoftChildren"]}[Data]
+		in
+		    dbo_KidsoftChildren
+	lineageTag: 739ccdbd-bd65-4741-8e82-f095e5b21179
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_ChildrenEnrolments =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftChildrenEnrolments = Source{[Schema="dbo",Item="KidsoftChildrenEnrolments"]}[Data]
+		in
+		    dbo_KidsoftChildrenEnrolments
+	lineageTag: f2dde5ba-1ff4-48d1-93e9-9c5f731ca907
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_Guardians =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftGuardians = Source{[Schema="dbo",Item="KidsoftGuardians"]}[Data]
+		in
+		    dbo_KidsoftGuardians
+	lineageTag: 034ef280-3778-47e7-b987-a327726b6f91
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_GuardianChildren =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftGuardianChildren = Source{[Schema="dbo",Item="KidsoftGuardianChildren"]}[Data]
+		in
+		    dbo_KidsoftGuardianChildren
+	lineageTag: 59d09026-c232-4eb1-8ad0-8caf473108b1
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_GuardianEnrolments =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftGuardianEnrolments = Source{[Schema="dbo",Item="KidsoftGuardianEnrolments"]}[Data]
+		in
+		    dbo_KidsoftGuardianEnrolments
+	lineageTag: bd96db00-3c74-4d01-b98f-73e04493e232
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_OpeningHours =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftOpeningHours = Source{[Schema="dbo",Item="KidsoftOpeningHours"]}[Data]
+		in
+		    dbo_KidsoftOpeningHours
+	lineageTag: cce4a0af-27a0-45cb-825d-1fdb655c45b5
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_Rooms =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftRooms = Source{[Schema="dbo",Item="KidsoftRooms"]}[Data],
+		    #"Replaced Value" = Table.ReplaceValue(dbo_KidsoftRooms,"A ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","B ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","C ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","D ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","E ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","F ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","* ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","1 ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","2 ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value9" = Table.ReplaceValue(#"Replaced Value8","3 ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value10" = Table.ReplaceValue(#"Replaced Value9","4 ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value11" = Table.ReplaceValue(#"Replaced Value10","5 ","",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value12" = Table.ReplaceValue(#"Replaced Value11","Before School","Before School Care",Replacer.ReplaceValue,{"Name"}),
+		    #"Replaced Value13" = Table.ReplaceValue(#"Replaced Value12","After School","After School Care",Replacer.ReplaceValue,{"Name"}),
+		    #"Replaced Value14" = Table.ReplaceValue(#"Replaced Value13","BeforSchool","Before School",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value15" = Table.ReplaceValue(#"Replaced Value14","Before School","Before School Care",Replacer.ReplaceValue,{"Name"}),
+		    #"Replaced Value16" = Table.ReplaceValue(#"Replaced Value15","HalDay","Half Day",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value17" = Table.ReplaceValue(#"Replaced Value16","Pupil FreDay","Pupil Free Day",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value18" = Table.ReplaceValue(#"Replaced Value17","Adventures","Adventurers",Replacer.ReplaceText,{"Name"}),
+		    #"Replaced Value19" = Table.ReplaceValue(#"Replaced Value18","Discovers","Discoverers",Replacer.ReplaceText,{"Name"})
+		in
+		    #"Replaced Value19"
+	lineageTag: b53e189a-c443-4518-84b7-d58c752284ec
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_ServiceDailyBalances =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftServiceDailyBalances = Source{[Schema="dbo",Item="KidsoftServiceDailyBalances"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KidsoftServiceDailyBalances,{{"LastUpdatedDateTimeUtc", type date}})
+		in
+		    #"Changed Type"
+	lineageTag: b862b598-37d8-4e5b-8143-62886d81f638
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Targets_Weekly =
+		let
+		    Source = Table.Combine({Weekly_OccupancyAndRevenue, #"Weekly WHPB_2025"})
+		in
+		    Source
+	lineageTag: 31d725e4-6c61-44ce-853f-4f527ee75a72
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Targets_Monthly =
+		let
+		    Source = Table.Combine({Monthly_WagesRev_2025, #"Monthly WHPB_2025"}),
+		    #"Appended Query" = Table.Combine({Source, #"Monthly CCE_2025"}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Appended Query","Nappies and bathroom supplies","Nappies and wipes",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Holiday ","Holidays ",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Progam","Program",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Expensed Equipment","Centre - Equipment < $1k",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Replaced Value3", each true),
+		    #"Added Conditional Column" = Table.AddColumn(#"Filtered Rows", "Metric Name -", each if Text.Contains([Metric Name], "equipment") then "Equipment" else [Metric Name]),
+		    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column",{"Metric Name"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Metric Name -", "Metric Name"}}),
+		    #"Replaced Value4" = Table.ReplaceValue(#"Renamed Columns","Centre - Equipment < $1k","Equipment",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Appended Query1" = Table.Combine({#"Replaced Value4", Monthly_OccupancyAndRevenue}),
+		    #"Trimmed Text" = Table.TransformColumns(#"Appended Query1",{{"Service", Text.Trim, type text}}),
+		    #"Calculated End of Month" = Table.TransformColumns(#"Trimmed Text",{{"Month", Date.EndOfMonth, type date}}),
+		    #"Filtered Rows1" = Table.SelectRows(#"Calculated End of Month", each true)
+		in
+		    #"Filtered Rows1"
+	lineageTag: bd377b40-36cd-44b0-88b9-a1730323b3a3
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Targets_ComplianceRatio =
+		let
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WCi5JzEtJLEpR0lEy0DUyAVIgbGRgZKoUq4MibWSia2wGpE1xyBubaQNJQwNk6dC8lNQihZKMVIWg/Pw0HHZgKMJqE4YqDPtiAQ==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Type = _t, #"Age Group" = _t, Ratio = _t, #"Fiscal Year" = _t]),
+		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Type", type text}, {"Age Group", type text}, {"Ratio", Int64.Type}, {"Fiscal Year", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: d83ed3be-8a8f-4f15-9dee-377b70346fe4
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Targets_AdditionalControllableCosts =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Controllable%20Cost%20Budget/Additional%20Controllable%20Costs.xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4"}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Expanded Data",{"Item", "Kind", "Hidden", "Name"}),
+		    #"Removed Top Rows" = Table.Skip(#"Removed Columns",2),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Top Rows", {"Data.Column2", "Data.Column3", "Data.Column4"}, "Attribute", "Value"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Data.Column2", "Christmas and Graduation Ceremony"}, {"Data.Column3", "Staff Amenities"}, {"Data.Column4", "Printing and Stationery"}}),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Renamed Columns",{"Attribute"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns1",{{"Value", "Service"}}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns1",{"Service", "Christmas and Graduation Ceremony", "Staff Amenities", "Printing and Stationery"}),
+		    #"Unpivoted Columns1" = Table.UnpivotOtherColumns(#"Reordered Columns", {"Service"}, "Attribute", "Value"),
+		    #"Renamed Columns2" = Table.RenameColumns(#"Unpivoted Columns1",{{"Attribute", "Metric Name"}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns2",{{"Value", type number}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","Christmas and Graduation Ceremony","Special Events Expense",Replacer.ReplaceText,{"Metric Name"})
+		in
+		    #"Replaced Value"
+	lineageTag: dd1681ae-57a9-4861-ac69-1bf2749e7af0
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KS_WaitingList =
+		let
+		    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+		    dbo_KidsoftWaitingList = Source{[Schema="dbo",Item="KidsoftWaitingList"]}[Data]
+		in
+		    dbo_KidsoftWaitingList
+	lineageTag: fc01de4f-cba4-4667-9448-51c9e9437ad3
+	queryGroup: KidSoft
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Locations =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayLocations = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayLocations"]}[Data]
+		in
+		    dbo_KeyPayLocations
+	lineageTag: 1bd49c09-699f-48b1-be5a-c007b33e98a5
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
+expression KP_Roster =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayRosterShifts = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayRosterShifts"]}[Data],
+		    #"Duplicated Column1" = Table.DuplicateColumn(dbo_KeyPayRosterShifts, "startTime", "startTime - Copy"),
+		    #"Renamed Columns2" = Table.RenameColumns(#"Duplicated Column1",{{"startTime - Copy", "Roster Date"}}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns2",{{"Roster Date", type date}}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type1",{{"endTime", "Roster End Time"}, {"startTime", "Roster Start Time"}, {"LastUpdatedDateTimeUtc", "Roster Last Updated"}, {"locationName", "Location Name"}, {"locationId", "Location ID"}, {"employeeId", "Employee ID"}, {"employeeName", "Employee Name"}, {"fullyQualifiedLocationName", "Location Name Long"}, {"description", "Roster Full Description"}, {"rosterShiftId", "Roster Shift ID"}}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns1",{"Roster Shift ID", "Roster Full Description", "Employee ID", "Employee Name", "Location ID", "Location Name", "Location Name Long", "Roster Start Time", "Roster End Time", "Roster Last Updated", "Roster Date"}),
+		    #"Merged Queries" = Table.NestedJoin(#"Reordered Columns", {"Roster Shift ID"}, #"KP_Roster Breaks", {"rosterShiftId"}, "Roster Breaks (KP)", JoinKind.LeftOuter),
+		    #"Expanded Roster Breaks (KP)" = Table.ExpandTableColumn(#"Merged Queries", "Roster Breaks (KP)", {"TotalBreakTime"}, {"Roster Breaks (KP).TotalBreakTime"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Expanded Roster Breaks (KP)", each ([published] = true)),
+		    #"Sorted Rows" = Table.Sort(#"Filtered Rows",{{"Roster Date", Order.Descending}})
+		in
+		    #"Sorted Rows"
+	lineageTag: 7ed49079-1b8c-4f1b-8337-b05c34b4599c
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KP_Pay Run Totals' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayRuns = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayRunTotals"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KeyPayPayRuns,{{"totalId", Int64.Type}, {"payRunId", Int64.Type}, {"employeeId", Int64.Type}, {"totalHours", type number}, {"grossEarnings", type number}, {"preTaxDeductions", Int64.Type}, {"taxableEarnings", type number}, {"postTaxDeductions", Int64.Type}, {"netEarnings", type number}, {"totalEmployeeExpenses", Int64.Type}, {"totalEmployerLiabilities", Int64.Type}, {"isPublished", type logical}, {"paygWithheld", Int64.Type}, {"sfssWithheld", Int64.Type}, {"helpWithheld", Int64.Type}, {"superContribution", type number}, {"employerContribution", Int64.Type}, {"notation", type text}, {"Id", Int64.Type}, {"BusinessId", Int64.Type}, {"KeyPayOrganisationId", Int64.Type}, {"LastUpdatedDateTimeUtc", type datetime}}),
+		    #"Duplicated Column" = Table.DuplicateColumn(#"Changed Type", "employeeId", "employeeId - Copy"),
+		    #"Merged Queries" = Table.NestedJoin(#"Duplicated Column", {"payRunId"}, #"KP_Pay Runs", {"payRunId"}, "KeyPayPayRuns", JoinKind.LeftOuter),
+		    #"Expanded KeyPayPayRuns" = Table.ExpandTableColumn(#"Merged Queries", "KeyPayPayRuns", {"dateFinalised"}, {"KeyPayPayRuns.dateFinalised"}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded KeyPayPayRuns",{{"KeyPayPayRuns.dateFinalised", type date}}),
+		    #"Duplicated Column1" = Table.DuplicateColumn(#"Changed Type1", "KeyPayPayRuns.dateFinalised", "KeyPayPayRuns.dateFinalised - Copy"),
+		    #"Merged Columns" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column1", {{"KeyPayPayRuns.dateFinalised", type text}, {"employeeId - Copy", type text}}, "en-AU"),{"KeyPayPayRuns.dateFinalised", "employeeId - Copy"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"EmployeeDateID"),
+		    #"Merged Queries1" = Table.NestedJoin(#"Merged Columns", {"EmployeeDateID"}, KP_EmployeeLocation, {"EmployeeDateID"}, "KeyPay_EmployeeLocation", JoinKind.LeftOuter),
+		    #"Expanded KeyPay_EmployeeLocation" = Table.ExpandTableColumn(#"Merged Queries1", "KeyPay_EmployeeLocation", {"LocationID"}, {"KeyPay_EmployeeLocation.LocationID"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Expanded KeyPay_EmployeeLocation",{{"KeyPay_EmployeeLocation.LocationID", "LocationID"}}),
+		    #"Merged Columns1" = Table.CombineColumns(Table.TransformColumnTypes(#"Renamed Columns", {{"KeyPayPayRuns.dateFinalised - Copy", type text}, {"LocationID", type text}}, "en-AU"),{"KeyPayPayRuns.dateFinalised - Copy", "LocationID"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"LocationAndDateID")
+		in
+		    #"Merged Columns1"
+	lineageTag: 48c9c830-366c-404d-bd00-c6a2b08e92d2
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
+expression 'KP_Pay Runs' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayPayRunTotals = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayPayRuns"]}[Data],
+		    #"Sorted Rows" = Table.Sort(dbo_KeyPayPayRunTotals,{{"payRunId", Order.Ascending}})
+		in
+		    #"Sorted Rows"
+	lineageTag: 838e1791-b06b-4c4f-9396-43ad631d9653
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_Timesheets =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayTimesheets = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayTimesheets"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(dbo_KeyPayTimesheets,{{"timesheetId", Int64.Type}, {"employeeId", Int64.Type}, {"startTime", type datetime}, {"endTime", type datetime}, {"status", type text}, {"workTypeId", Int64.Type}, {"workType", type text}, {"leaveCategoryId", Int64.Type}, {"payCategoryId", Int64.Type}, {"externalId", type text}, {"source", type text}, {"locationId", Int64.Type}, {"locationIsDeleted", type logical}, {"fullyQualifiedLocationName", type text}, {"comments", type text}, {"hiddenComments", type text}, {"submittedByUser", type text}, {"classificationId", Int64.Type}, {"classification", type text}, {"units", type number}, {"rate", type number}, {"attachmentId", type number}, {"attachmentDateCreated", type datetime}, {"attachmentDateScanned", type datetime}, {"attachmentFriendlyName", type text}, {"attachmentIsDeleted", type logical}, {"attachmentIsInfected", type logical}, {"attachmentUrl", type text}, {"Id", Int64.Type}, {"BusinessId", Int64.Type}, {"KeyPayOrganisationId", Int64.Type}, {"LastUpdatedDateTimeUtc", type datetime}}),
+		    #"Merged Queries" = Table.NestedJoin(#"Changed Type", {"locationId"}, KP_Locations, {"locationId"}, "Locations (KP)", JoinKind.LeftOuter),
+		    #"Expanded KeyPayLocations" = Table.ExpandTableColumn(#"Merged Queries", "Locations (KP)", {"name", "fullyQualifiedName"}, {"KeyPayLocations.name", "KeyPayLocations.fullyQualifiedName"}),
+		    #"Duplicated Column" = Table.DuplicateColumn(#"Expanded KeyPayLocations", "employeeId", "employeeId - Copy"),
+		    #"Duplicated Column1" = Table.DuplicateColumn(#"Duplicated Column", "locationId", "locationId - Copy"),
+		    #"Merged Columns" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column1", {{"employeeId - Copy", type text},{"locationId - Copy", type text}}, "en-AU"),{"employeeId - Copy",
+		"locationId - Copy"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"EmployeeAndLocationID")
+		in
+		    #"Merged Columns"
+	lineageTag: 91d4aeae-0b84-4437-8062-2aad7227054a
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
+expression 'KP_Timesheet Breaks' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayTimesheetBreaks = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayTimesheetBreaks"]}[Data]
+		in
+		    dbo_KeyPayTimesheetBreaks
+	lineageTag: f9fd7a67-b3bd-4e1d-9e2d-9ff16ff5318c
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression KP_LeaveRequests =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayLeaveRequests = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayLeaveRequests"]}[Data]
+		in
+		    dbo_KeyPayLeaveRequests
+	lineageTag: dbbc29f4-33c9-4ab9-a322-5a879b6aa5a2
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Xero_Accounts =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_Accounts = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="Accounts"]}[Data],
+		    #"Removed Columns" = Table.RemoveColumns(dbo_Accounts,{"bankaccountnumber", "bankaccounttype", "class", "currencycode", "description", "enablepaymentstoaccount", "hasattachments", "showinexpenseclaims", "status", "systemaccount", "taxtype", "type", "updateddateutc", "accountcodeandorganisationid", "Id", "XeroOrganisationId"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"accountid", "Account ID"}, {"code", "Account Code"}, {"name", "Account Name"}, {"reportingcode", "Reporting Code"}, {"reportingcodename", "Reporting Name"}, {"LastUpdatedDateTimeUtc", "Last Updated (UTC)"}, {"typeId", "Account Type"}}),
+		    #"Trimmed Text" = Table.TransformColumns(#"Renamed Columns",{{"Account Name", Text.Trim, type text}}),
+		    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Account Name", Text.Clean, type text}}),
+		    #"Merged Queries" = Table.NestedJoin(#"Cleaned Text", {"Account Type"}, #"Xero_Account Type", {"Account Type ID"}, "Xero_Account Type", JoinKind.LeftOuter),
+		    #"Expanded Xero_Account Type" = Table.ExpandTableColumn(#"Merged Queries", "Xero_Account Type", {"Account Type", "Account Type Order"}, {"Xero_Account Type.Account Type", "Xero_Account Type.Account Type Order"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Expanded Xero_Account Type", each ([Xero_Account Type.Account Type] = "Depreciation" or [Xero_Account Type.Account Type] = "Direct Costs" or [Xero_Account Type.Account Type] = "Expense" or [Xero_Account Type.Account Type] = "Revenue"))
+		in
+		    #"Filtered Rows"
+	lineageTag: eeec870e-de69-4400-8884-455d549ccd7f
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Xero_Account Type' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_AccountType = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="AccountType"]}[Data],
+		    #"Removed Columns" = Table.RemoveColumns(dbo_AccountType,{"XeroUserAccountType"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Id", "Account Type PK"}, {"Description", "Account Type"}, {"AccountGroupType", "Account Group Type"}, {"IsDebitAccount", "is Debit"}, {"AccountTypeOrder", "Account Type Order"}, {"ReportType", "Report Type"}, {"AccountTypeId", "Account Type ID"}}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"Account Type PK", "Account Type ID", "Account Type", "Account Group Type", "Report Type", "is Debit", "Account Type Order"})
+		in
+		    #"Reordered Columns"
+	lineageTag: 8f5d90ea-4e88-450e-87ef-7c7a0ff04b42
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Survey_Results =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://ececservices-my.sharepoint.com/personal/reporting_ececservices_com_au/Documents/Village%20EL%20Documents/Survey%20Forms/Family%20Survey_%20Kidzbiz%20LDC(1-58)%20(2).xlsx"), null, true),
+		    #"Expanded Data" = Table.ExpandTableColumn(Source, "Data", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "Column12", "Column13", "Column14", "Column15", "ID", "Start time", "Completion time", "Email", "Name", "Which Kidzbiz service is your child enrolled in?", "#(lf)Which age group does your child/ren belong to? (you can make multiple selections if you have more than one child enrolled)", "Does your child/ren attend Kidzbiz vacation care program?", "How long have you been utilising KidzBiz?", "On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", "How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", "Have you noticed any improvements or changes in your child's social and emotional wellbeing since enrolling in Kidzbiz?", "Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", "Out of a scale of 1 to 10  would you recommend our service to your friends and family?", "Do you have any other comments or suggestions?"}, {"Data.Column1", "Data.Column2", "Data.Column3", "Data.Column4", "Data.Column5", "Data.Column6", "Data.Column7", "Data.Column8", "Data.Column9", "Data.Column10", "Data.Column11", "Data.Column12", "Data.Column13", "Data.Column14", "Data.Column15", "Data.ID", "Data.Start time", "Data.Completion time", "Data.Email", "Data.Name", "Data.Which Kidzbiz service is your child enrolled in?", "Data.#(lf)Which age group does your child/ren belong to? (you can make multiple sele", "Data.Does your child/ren attend Kidzbiz vacation care program?", "Data.How long have you been utilising KidzBiz?", "Data.On a scale of 1 to 5, how satisfied are you with the overall quality of Kid", "Data.How would you rate the communication between our team of educators and your", "Data.Have you noticed any improvements or changes in your child's social and emo", "Data.Are there any specific aspects of Kidzbiz that you believe could be improve", "Data.Out of a scale of 1 to 10  would you recommend our service to your friends ", "Data.Do you have any other comments or suggestions?"}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Expanded Data", [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Sheet1", type text}, {"ID", Int64.Type}, {"Start time", type datetime}, {"Completion time", type datetime}, {"Email", type text}, {"Name", type any}, {"Which Kidzbiz service is your child enrolled in?", type text}, {"What room/s is your child/ren enrolled in? (you can make multiple selections if you have more then one child enrolled)", type text}, {"How long have you been utilising Kidzbiz?", type text}, {"On a scale of 1 to 5, how satisfied are you with the overall quality of Kidzbiz?#(lf)(1 = Very Dissatisfied, 5 = Very Satisfied)#(lf)", Int64.Type}, {"How would you rate the communication between our team of educators and your family, regarding your child's progress and daily activities?#(lf)(1 = Poor, 5 = Excellent)", Int64.Type}, {"Have you noticed any improvements or changes in your child's development since enrolling in Kidzbiz?", type text}, {"Are there any specific aspects of Kidzbiz that you believe could be improved? Please provide details or suggestions.  ", type text}, {"Out of a scale of 1 to 10  would you recommend our service to your friends and family?", Int64.Type}, {"Do you have any other comments or suggestions?", type text}, {"Column16", type any}, {"Column17", Int64.Type}, {"Column18", type datetime}, {"Column19", type datetime}, {"Column20", type text}, {"Column21", type any}, {"Column22", type text}, {"Column23", type any}, {"Column24", type any}, {"Column25", type any}, {"Column26", Int64.Type}, {"Column27", Int64.Type}, {"Column28", type any}, {"Column29", type text}, {"Column30", Int64.Type}, {"Column31", type text}, {"Sheet1_1", type text}, {"Sheet", type text}, {"false", type logical}}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Which Kidzbiz service is your child enrolled in?", "Service"}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns",";","",Replacer.ReplaceText,{"Service"}),
+		    #"Removed Blank Rows" = Table.SelectRows(#"Replaced Value", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+		    #"Removed Columns" = Table.RemoveColumns(#"Removed Blank Rows",{"Sheet1", "Column16", "Column17", "Column18", "Column19", "Column20", "Column21", "Column22", "Column23", "Column24", "Column25", "Column26", "Column27", "Column28", "Column29", "Column30", "Column31", "Sheet1_1", "Sheet", "false"}),
+		    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Columns", {"ID", "Start time", "Completion time", "Email", "Name", "Service"}, "Attribute", "Value"),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Question"}, {"Value", "Answer"}}),
+		    #"Appended Query" = Table.Combine({#"Renamed Columns1", #"KidzBiz OSCH", #"VEL White Gum Valley", Karrinyup, #"Smileys OSCH", #"VEL Stirling", #"VEL Claremont", #"VEL Harrisdale", #"VEL Piara Waters"}),
+		    #"Added Custom" = Table.AddColumn(#"Appended Query", "Survey Date", each [Start time]),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Survey Date", type date}})
+		in
+		    #"Changed Type1"
+	lineageTag: d37e2b3a-0a85-4524-b1df-12db842f0a9a
+	queryGroup: Forms
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Monthly_Occupancy_Budget =
+		let
+		    Source = Table.Combine({Monthly_WagesRev_2025, #"Monthly WHPB_2025"}),
+		    #"Appended Query" = Table.Combine({Source, #"Monthly CCE_2025"}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Appended Query","Nappies and bathroom supplies","Nappies and wipes",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Holiday ","Holidays ",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Progam","Program",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Expensed Equipment","Centre - Equipment < $1k",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Replaced Value3", each true),
+		    #"Added Conditional Column" = Table.AddColumn(#"Filtered Rows", "Metric Name -", each if Text.Contains([Metric Name], "equipment") then "Equipment" else [Metric Name]),
+		    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column",{"Metric Name"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Metric Name -", "Metric Name"}}),
+		    #"Replaced Value4" = Table.ReplaceValue(#"Renamed Columns","Centre - Equipment < $1k","Equipment",Replacer.ReplaceText,{"Metric Name"}),
+		    #"Appended Query1" = Table.Combine({#"Replaced Value4", Monthly_OccupancyAndRevenue}),
+		    #"Trimmed Text" = Table.TransformColumns(#"Appended Query1",{{"Service", Text.Trim, type text}}),
+		    #"Filtered Rows1" = Table.SelectRows(#"Trimmed Text", each ([Metric Name] = "Occupancy"))
+		in
+		    #"Filtered Rows1"
+	lineageTag: cabf1d1d-bfcd-4be0-b2e9-9e53b023a17a
+	queryGroup: Targets
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Tenure Sort Table' =
+		let
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMs5V0lEyVIrViVYyAzGNwEzDSiDTGMw0AjFNwExjENMUytQGss3AbL98Baf8/OzMvPRioJi5UmwsAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Tenure Group" = _t, Sort = _t]),
+		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Tenure Group", type text}, {"Sort", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: a2cebaf2-0884-4cf9-9dbc-136f783c45a7
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KP_Roster No Breaks' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayRosterShifts = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayRosterShifts"]}[Data],
+		    #"Duplicated Column1" = Table.DuplicateColumn(dbo_KeyPayRosterShifts, "startTime", "startTime - Copy"),
+		    #"Renamed Columns2" = Table.RenameColumns(#"Duplicated Column1",{{"startTime - Copy", "Roster Date"}}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns2",{{"Roster Date", type date}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"notes", "accepted", "datePublished", "biddable", "shiftAssignmentStatus", "Id", "BusinessId", "KeyPayOrganisationId", "isDifferent", "roleId", "roleName"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns",{{"endTime", "Roster End Time"}, {"startTime", "Roster Start Time"}, {"LastUpdatedDateTimeUtc", "Roster Last Updated"}, {"locationName", "Location Name"}, {"locationId", "Location ID"}, {"employeeId", "Employee ID"}, {"employeeName", "Employee Name"}, {"fullyQualifiedLocationName", "Location Name Long"}, {"description", "Roster Full Description"}, {"rosterShiftId", "Roster Shift ID"}}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns1",{"Roster Shift ID", "Roster Full Description", "Employee ID", "Employee Name", "Location ID", "Location Name", "Location Name Long", "Roster Start Time", "Roster End Time", "Roster Last Updated", "Roster Date"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Reordered Columns", each ([published] = true)),
+		    #"Sorted Rows" = Table.Sort(#"Filtered Rows",{{"Roster Shift ID", Order.Descending}}),
+		    #"Grouped Rows" = Table.Group(#"Sorted Rows", {"Roster Shift ID", "Employee ID", "Location Name", "Location Name Long", "Roster Start Time", "Roster End Time", "published", "Roster Date"}, {{"Count", each List.Max([Roster Last Updated]), type nullable datetime}})
+		in
+		    #"Grouped Rows"
+	lineageTag: 66b3d9b6-9561-4ffa-90fb-9360e055ff8c
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Pipeline Waterfall' =
+		let
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("XY3LCgIxDEV/pXQ9G1+jLmUQdyI+ECldlLbOBGoqnfj4fEPGje7u5eTmGKNXnuAZVdNBCiWi2tUvXemRtpXRayw5pRjUgVyhGBiMBTQZr1BuTM4OKEFPjCbD5g3Uc5tKO6HzPj+Qx6xw2EZGM0H/4r2I61/xJZKiPPiZzoVu3J3zQvLRlZZvvs+28mOprf0A", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Pipeline Waterfall" = _t, Order = _t]),
+		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Pipeline Waterfall", type text}, {"Order", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: a97e1329-1879-4b5b-8881-4396d0011b85
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Xero_JournalTransactions =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_XeroAccountTransactionsUsingJournalLinesView = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="XeroAccountTransactionsUsingJournalLinesView"]}[Data],
+		    #"Filtered Rows" = Table.SelectRows(dbo_XeroAccountTransactionsUsingJournalLinesView, each ([Account Type] = "Depreciation" or [Account Type] = "Direct Costs" or [Account Type] = "Expense" or [Account Type] = "Revenue")),
+		    #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows","Christmas and graduation ceremony","Special Events Expense",Replacer.ReplaceText,{"Account"})
+		in
+		    #"Replaced Value"
+	lineageTag: 2a918ebf-c08e-413a-9f8a-e8ab4476d171
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression EquipmentFlag = ```
+		let
+		    Source = Table.FromRows(
+		        Json.Document(
+		            Binary.Decompress(
+		                Binary.FromText(
+		                    "hc7LakIxEIDhVxmCS4u3Vt2K2BYKpeDSnsV4EjyDyUyai+LbN+aguHOZ+b8ks9uptTXIxAfYZu8tmaiGaqKa4bVgjEHE3dNo1SY6UerVtFfCMTvc2zqb1dm7iAZkDV+U2s7w49uvVXyj9+Vc0Zl8LW+13K68wOYvk3eGE/zm8XjWwmByLGzef1vmwTxVHVkdDF/TdBGf4UAxOey3+gioMyYShrUJxglfilxUuW07EQufYknjJcJPkENAV/pSNc0/",
+		                    BinaryEncoding.Base64
+		                ),
+		                Compression.Deflate
+		            )
+		        ),
+		        let _t = ((type nullable text) meta [Serialized.Text = true]) in
+		        type table [EquipmentFlag = _t, SortOrder = _t]
+		    ),
+		    
+		    // Change column types
+		    #"Changed Type" = Table.TransformColumnTypes(Source, {
+		        {"EquipmentFlag", type text},
+		        {"SortOrder", Int64.Type}
+		    }),
+		
+		    // Add new row
+		    #"Added Row" = Table.InsertRows(#"Changed Type", Table.RowCount(#"Changed Type"), {
+		        [EquipmentFlag = "Sporting Incursions", SortOrder = 9]
+		    })
+		in
+		    #"Added Row"
+		```
+	lineageTag: 24bbd0f3-943a-44de-bdb2-4abd8f7bf0ef
+	queryGroup: Xero
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'KP_Roster Breaks' =
+		let
+		    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+		    yourdatahub_ececservicesptyltd = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+		    dbo_KeyPayRosterShiftBreaks = yourdatahub_ececservicesptyltd{[Schema="dbo",Item="KeyPayRosterShiftBreaks"]}[Data],
+		    #"Removed Columns" = Table.RemoveColumns(dbo_KeyPayRosterShiftBreaks,{"rosterShiftBreakId", "isPaidBreak", "Id", "BusinessId", "KeyPayOrganisationId", "LastUpdatedDateTimeUtc"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"startTime", type number}, {"endTime", type number}}),
+		    #"Inserted Subtraction" = Table.AddColumn(#"Changed Type", "Subtraction", each [endTime] - [startTime], type number),
+		    #"Grouped Rows" = Table.Group(#"Inserted Subtraction", {"rosterShiftId"}, {{"TotalBreakTime", each List.Sum([Subtraction]), type number}})
+		in
+		    #"Grouped Rows"
+	lineageTag: eea1fe4f-425a-4fd2-a3a0-be67481992be
+	queryGroup: KeyPay
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

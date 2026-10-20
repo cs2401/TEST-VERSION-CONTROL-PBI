@@ -1,0 +1,349 @@
+table _Services
+	lineageTag: 9ea31e87-b1fa-4851-b2f4-6be9a010f777
+
+	column externalId
+		dataType: string
+		lineageTag: 85b94420-39ca-489b-afa6-dcb23653031a
+		summarizeBy: none
+		sourceColumn: externalId
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: string
+		lineageTag: 0f8a0689-1925-4f7c-bb33-fb75d62f0242
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Name'
+		dataType: string
+		lineageTag: 6ab87e71-4bd5-4631-8aaa-b6af59fd8ea1
+		summarizeBy: none
+		sourceColumn: Short Name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'KeyPayKiosks.name'
+		dataType: string
+		lineageTag: 76a1806b-fc9e-48f4-bf5e-c889c4a79dd9
+		summarizeBy: none
+		sourceColumn: KeyPayKiosks.name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Join =
+			
+			SWITCH (
+			    TRUE(),
+			    _Services[Short Name] = "Beaumaris" && _Services[Location Name] = "Babies", "BeaumarisAdventurers",
+			    _Services[Short Name] = "Beaumaris" && _Services[Location Name] = "Toddlers 1", "BeaumarisBuilders",
+			    _Services[Short Name] = "Beaumaris" && _Services[Location Name] = "Toddlers 2", "BeaumarisCreators",
+			    _Services[Short Name] = "Beaumaris" && _Services[Location Name] = "Pre Kindy", "BeaumarisDiscoverers",
+			    _Services[Short Name] = "Beaumaris" && _Services[Location Name] = "Kindy", "BeaumarisExplorers",
+			    _Services[Short Name] = "Dianella" && _Services[Location Name] = "Pre Kindy", "DianellaPrKindy",
+			    _Services[Short Name] = "Wanneroo" && _Services[Location Name] = "Wanneroo", "WannerooKindy",
+			    _Services[Short Name] = "Wanneroo" && _Services[Location Name] = "Pre Kindy", "WannerooPrKindy",
+			    _Services[Short Name] = "Nedlands" && _Services[Location Name] = "Vacation Care", "NedlandsPupil Free",
+			    _Services[Short Name] = "Hollywood" && _Services[Location Name] = "After School Care", "HollywoodAfter School Care",
+			    _Services[Short Name] = "Beaconsfield" && _Services[Location Name] = "After School Care", "BeaconsfieldAfter School Care",
+			    _Services[Short Name] = "WSR" && _Services[Location Name] = "Sr Wanneroo", "Sr WannerooSr Wanneroo",
+			    _Services[Short Name] & _Services[Location Name] )
+		lineageTag: c9c466cd-4aaa-4db9-a050-95e147817eb4
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Location Name'
+		dataType: string
+		lineageTag: 40bd7a82-1799-411a-89e7-4baca2143fcc
+		summarizeBy: none
+		sourceColumn: Location Name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoomID = ```
+			
+			    CALCULATE (
+			        FIRSTNONBLANK ( KS_Rooms[RoomID], 1 ),
+			        FILTER ( KS_Rooms, KS_Rooms[Join] = _Services[Join] && KS_Rooms[Active] = "Yes")
+			    )
+			```
+		lineageTag: e4395e50-e9b4-41bb-83f9-73b8386a40ac
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceCombinedKey = ```
+			
+			VAR result = 
+			    VAR KS = 
+			    LEFT('_Services'[ServiceID_KS], 6) &
+			    LEFT('_Services'[RoomID], 6 ) 
+			    VAR KP =
+			    LEFT ( _Services[ServiceID_KP], 6 ) &
+			    LEFT ( _Services[LocationId_KP] )
+			    RETURN
+			   COALESCE ( KS , KP )
+			RETURN
+			SWITCH( TRUE() ,
+			    _Services[ServiceID_KS] = "08c294a8-3b2e-4eaa-8627-69f89161c429" && //beaconsfield edge case
+			    NOT ( _Services[RoomID] IN {"2d513f9d-1452-420e-bcd3-787e6196f746", "667bda38-be8e-4984-9759-7da84ff0747b"} ),
+			    "12345", 
+			    _Services[ServiceID_KS] = "abe47aaa-7d86-4c9d-bbf8-2b4a8ae68685" && _Services[RoomID] = "af52dc9d-ca17-4a6a-8d88-d9b009df99c9" , //wanneroo edge case
+			    LEFT( _Services[RoomID], 6 ) ,
+			    result
+			)
+			```
+		lineageTag: c643b2c0-ea01-400d-bc01-3ba31a5c1084
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Care Type' = ```
+			
+			VAR CareType = LOOKUPVALUE(KS_Rooms[ApprovalType], KS_Rooms[Join], _Services[Join] )
+			RETURN
+			SWITCH (
+			    TRUE(),
+			    NOT ( CareType IN { BLANK(), "LDC" } ), "OSCH", 
+			    _Services[Location Name] IN { "After School Care", "Before School Care", "Vacation Care" }, "OSCH",
+			    _Services[RoomID] = BLANK() && CONTAINSSTRING(_Services[Full Name], "Early Learning") && _Services[Location Name] <> "Support", "LDC",
+			    CareType 
+			)
+			```
+		lineageTag: 3c323dc9-698f-49d5-9b85-9a1147deb4a7
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LocationID_KP
+		dataType: int64
+		formatString: 0
+		lineageTag: afaffb45-17e0-4f56-9bea-413dd6d1a33f
+		summarizeBy: sum
+		sourceColumn: LocationID_KP
+
+		changedProperty = IsHidden
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column ParentId
+		dataType: string
+		lineageTag: 95d95ba7-20b4-4772-94cc-d12a8ad66278
+		summarizeBy: none
+		sourceColumn: ParentId
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Full Name'
+		dataType: string
+		lineageTag: 9c277c07-3443-4643-bfeb-9ece37848866
+		summarizeBy: none
+		sourceColumn: Full Name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceID_KP
+		dataType: string
+		lineageTag: 85d54101-7679-49d1-bdd3-ce10deed96e1
+		summarizeBy: none
+		sourceColumn: ServiceID_KP
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceID_KS
+		dataType: string
+		lineageTag: 781e704d-5b63-425e-8244-b0bb028c4f2a
+		summarizeBy: none
+		sourceColumn: ServiceID_KS
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceId_LL
+		dataType: int64
+		formatString: 0
+		lineageTag: 237e329d-0563-4ceb-bb7e-a44e75f39fbd
+		summarizeBy: none
+		sourceColumn: ServiceId_LL
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fully Qualified Name'
+		dataType: string
+		lineageTag: 72a6caae-d30b-4f7e-9fd5-5fd0adf6f9fd
+		summarizeBy: none
+		sourceColumn: Fully Qualified Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conversion Flag' =
+			
+			VAR phrase = "village early learning"
+			VAR cname   = LOWER ( TRIM ( _Services[Full name] ) )
+			RETURN
+			IF ( LEFT ( cname, LEN ( phrase ) ) = phrase, 1, 0 )
+		formatString: 0
+		lineageTag: f4dc3ccd-74c7-41a4-87d8-83035b6907d4
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Services = m
+		mode: import
+		queryGroup: Combined
+		source = ```
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd", [
+				        Query = "
+				            SELECT 
+				                l.[locationId] AS [LocationID_KP], 
+				                l.externalId, 
+				                l.[parentId] AS [ParentId],
+				                l.LastUpdatedDateTimeUtc, 
+				                CASE
+				                    WHEN l.fullyQualifiedName LIKE '%Claremont%' THEN 'Village Early Learning Claremont'
+				                    WHEN l.fullyQualifiedName LIKE '%Karrinyup%' THEN 'Village Early Learning Karrinyup'
+				                    WHEN l.fullyQualifiedName LIKE '%WSR%' THEN 'Kidz Biz Sport & Recreation Care - Wanneroo'
+				                    WHEN l.fullyQualifiedName LIKE '%NSR%' THEN 'Kidz Biz Sport & Recreation Care - Nedlands'
+				                    WHEN l.fullyQualifiedName LIKE '%BSR%' THEN 'Kidz Biz Sport & Recreation Care - Beaumaris'
+				                    WHEN l.fullyQualifiedName LIKE '%HSR%' THEN 'Kidz Biz Sport & Recreation Care - Hollywood'
+				                    ELSE s.name 
+				                END AS [Full Name], 
+				                COALESCE(
+				                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+				                        s.name,
+				                        'Kidz Biz Sport & Recreation Care - Wanneroo', 'SR Wanneroo'),
+				                        'Kidz Biz Sport & Recreation Care - Nedlands', 'SR Nedlands'),
+				                        'Kidz Biz Sport & Recreation Care - Beaumaris', 'SR Beaumaris'),
+				                        'Kidz Biz Sport & Recreation Care - Hollywood', 'SR Hollywood'),
+				                        'Kidz Biz Sport & Recreation Care - ', ''),
+				                        'Kidz Biz on ', ''),
+				                        'Kidz Biz Early Learning Centre - ', ''),
+				                        'Village Early Learning ', ''),
+				                        'Village Before & Beyond ', ''
+				                    ), s.name) AS [Short Name],
+				                l.fullyQualifiedName AS [Fully Qualified Name], 
+				                COALESCE(NULLIF(k2.[LocationId], ''), l.[LocationId]) AS [ServiceID_KP], 
+				                CASE
+				                    WHEN l.fullyQualifiedName LIKE '%Claremont%' THEN 'Village Early Learning Claremont'
+				                    WHEN l.fullyQualifiedName LIKE '%Karrinyup%' THEN 'Village Early Learning Karrinyup'
+				                    WHEN l.fullyQualifiedName LIKE '%WSR%' THEN 'Kidz Biz Sport & Recreation Care - Wanneroo'
+				                    WHEN l.fullyQualifiedName LIKE '%NSR%' THEN 'Kidz Biz Sport & Recreation Care - Nedlands'
+				                    WHEN l.fullyQualifiedName LIKE '%BSR%' THEN 'Kidz Biz Sport & Recreation Care - Beaumaris'
+				                    WHEN l.fullyQualifiedName LIKE '%HSR%' THEN 'Kidz Biz Sport & Recreation Care - Hollywood'
+				                    ELSE s.name 
+				                END AS [KeyPayKiosks.name],
+				                CASE 
+				                    WHEN CHARINDEX('-', REVERSE(REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood'))) > 0 THEN 
+				                        REVERSE(
+				                            LEFT(REVERSE(REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')), 
+				                            CHARINDEX('-', REVERSE(REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood'))) - 1)
+				                        )
+				                    ELSE 
+				                        CASE 
+				                            WHEN CHARINDEX('/', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')) > 0 THEN 
+				                                REVERSE(
+				                                    LEFT(REVERSE(REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')), 
+				                                    CHARINDEX('/', REVERSE(REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood'))) - 1)
+				                                )
+				                            ELSE l.name 
+				                        END
+				                END AS [Location Name],
+				                CASE 
+				                    WHEN l.fullyQualifiedName LIKE '%WSR%' THEN 'abe47aaa-7d86-4c9d-bbf8-2b4a8ae68685' 
+				                    ELSE s.ServiceID 
+				                END AS [ServiceID_KS],
+				                ll.center_id AS [ServiceId_LL]
+				            FROM 
+				                [KeyPayLocations] AS l 
+				            FULL OUTER JOIN KidsoftServices AS s ON
+				                CASE 
+				                    WHEN CHARINDEX('/ ', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')) > 0 
+				                        AND CHARINDEX(' /', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood'), CHARINDEX('/ ', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')) + 2) > 0 
+				                    THEN 
+				                        SUBSTRING(
+				                            REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood'),
+				                            CHARINDEX('/ ', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')) + 2,
+				                            CHARINDEX(' /', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood'), CHARINDEX('/ ', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')) + 2)
+				                            - (CHARINDEX('/ ', REPLACE(REPLACE(REPLACE(REPLACE(l.fullyQualifiedName, 'WSR', 'SR Wanneroo'), 'NSR', 'SR Nedlands'), 'BSR', 'SR Beaumaris'), 'HSR', 'SR Hollywood')) + 2)
+				                        )
+				                    ELSE l.name 
+				                END = 
+				                COALESCE(
+				                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+				                        s.name,
+				                        'Kidz Biz Sport & Recreation Care - Wanneroo', 'SR Wanneroo'),
+				                        'Kidz Biz Sport & Recreation Care - Nedlands', 'SR Nedlands'),
+				                        'Kidz Biz Sport & Recreation Care - Beaumaris', 'SR Beaumaris'),
+				                        'Kidz Biz Sport & Recreation Care - Hollywood', 'SR Hollywood'),
+				                        'Kidz Biz Sport & Recreation Care - ', ''),
+				                        'Kidz Biz on ', ''),
+				                        'Kidz Biz Early Learning Centre - ', ''),
+				                        'Village Early Learning ', ''),
+				                        'Village Before & Beyond ', ''
+				                    ), s.name)
+				            LEFT JOIN LineLeaderCenters AS ll ON ll.name = s.name 
+				            LEFT JOIN [KidsoftServices] AS s2 ON s.ServiceID = s2.ServiceID 
+				            LEFT JOIN [KeyPayKiosks] AS k1 ON k1.name = s.name 
+				            LEFT JOIN [KeyPayKiosks] AS k2 ON k2.locationId = l.locationId
+				        "]),
+				    #"Sorted Rows" = Table.Sort(Source,{{"Fully Qualified Name", Order.Ascending}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Sorted Rows","(A) ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Replaced Value",{{"Location Name", Text.Proper, type text}}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Capitalized Each Word","(B) ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","(C) ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","(D)","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","(E) ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","(F) ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","(G) ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6",".","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value11" = Table.ReplaceValue(#"Replaced Value7","Ljbc","LJBC",Replacer.ReplaceText,{"KeyPayKiosks.name"}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Replaced Value11", each ([Short Name] <> "Support Office")),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Filtered Rows1","SR Wanneroo ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Replaced Value8", each true),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows",{{"LocationID_KP", Int64.Type}, {"ParentId", Int64.Type}, {"ServiceID_KP", Int64.Type}}),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Changed Type","Afterschool","After School",Replacer.ReplaceText,{"Location Name"}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Replaced Value9","Boo ","Book ",Replacer.ReplaceText,{"Location Name"}),
+				    #"Trimmed Text1" = Table.TransformColumns(Table.TransformColumnTypes(#"Replaced Value10", {{"ServiceID_KP", type text}, {"LastUpdatedDateTimeUtc", type text}, {"ParentId", type text}, {"LocationID_KP", type text}}, "en-AU"),{{"ServiceID_KS", Text.Trim, type text}, {"Location Name", Text.Trim, type text}, {"KeyPayKiosks.name", Text.Trim, type text}, {"ServiceID_KP", Text.Trim, type text}, {"Fully Qualified Name", Text.Trim, type text}, {"Short Name", Text.Trim, type text}, {"Full Name", Text.Trim, type text}, {"LastUpdatedDateTimeUtc", Text.Trim, type text}, {"ParentId", Text.Trim, type text}, {"externalId", Text.Trim, type text}, {"LocationID_KP", Text.Trim, type text}}),
+				    #"Replaced Value12" = Table.ReplaceValue(#"Trimmed Text1","Sr Wanneroo ","",Replacer.ReplaceText,{"Location Name"}),
+				    #"Sorted Rows1" = Table.Sort(#"Replaced Value12",{{"Short Name", Order.Ascending}})
+				in
+				    #"Sorted Rows1"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

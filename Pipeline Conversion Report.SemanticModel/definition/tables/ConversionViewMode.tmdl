@@ -1,0 +1,26 @@
+table ConversionViewMode
+	lineageTag: 36996709-8cdf-4ab8-9cd0-eab42f156667
+
+	column Mode
+		lineageTag: 0958f723-ac16-4933-b128-6c2863b88ffa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mode]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ConversionViewMode = calculated
+		mode: import
+		source = ```
+				DATATABLE(
+				    "Mode", STRING,
+				    {
+				        {"Percent"},
+				        {"Days"}
+				    }
+				)
+				
+				```
+
+	annotation PBI_Id = 62d976a63e2b4bf6943ed14025ca680a
+

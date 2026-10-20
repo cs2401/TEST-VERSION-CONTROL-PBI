@@ -1,0 +1,21 @@
+table SelectableDateTable
+	lineageTag: c95748c3-ca7d-476b-946b-834e3d269c41
+
+	column SelectableDate
+		formatString: General Date
+		lineageTag: 813891e0-a115-4ebc-937d-6b03edf88975
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [SelectableDate]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SelectableDateTable = calculated
+		mode: import
+		source = ```
+				DISTINCT(SELECTCOLUMNS(_Date, "SelectableDate", _Date[Date]))
+				
+				```
+
+	annotation PBI_Id = 4dea7c11e41e4585b301021e04d4e02c
+

@@ -1,0 +1,408 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "e337a0b180b78bb99b5c",
+  "position": {
+    "x": 20.408163265306122,
+    "y": 129.25170068027211,
+    "z": 2000,
+    "height": 670.06802721088434,
+    "width": 1950.6802721088436,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "The main data source for this dashboard is ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "LineLeader:",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "\t\t\t\t\t\t"
+                  },
+                  {
+                    "value": "- ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "Family Status",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " values come from the ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "Updates",
+                    "textStyle": {
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " table and reflect changes made by centre staff.",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "\t\t\t\t\t\t"
+                  },
+                  {
+                    "value": "-",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "\t"
+                  },
+                  {
+                    "value": "Tour completion dates",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " rely on accurate entry of ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "LineLeader Tasks",
+                    "textStyle": {
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": ", especially the ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "“Self-Scheduled Tour”",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " task.",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "\t\t\t\t\t\t"
+                  },
+                  {
+                    "value": "-",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "\t"
+                  },
+                  {
+                    "value": "Reliable conversion reporting depends on both the correct entry of Family Status and the submission of the Tour Completion task.",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "\t\t\t\t\t\t"
+                  },
+                  {
+                    "value": "-",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "\t"
+                  },
+                  {
+                    "value": "Instances where the ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "Tour task",
+                    "textStyle": {
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " has been completed, and a subsequent family status has not been updated, will cause errors in the conversion metrics. ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "\t\t\t\t\t\t"
+                  },
+                  {
+                    "value": "-",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "\t"
+                  },
+                  {
+                    "value": "Family ID 597",
+                    "textStyle": {
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " is an example of this whereby the family status was changed to ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "Enrolled (Started) ",
+                    "textStyle": {
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "on 20/06/2025 but the ",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": "Tour task",
+                    "textStyle": {
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  },
+                  {
+                    "value": " was completed on 02/07/2025.",
+                    "textStyle": {
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Pipeline Overview",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "20pt",
+                      "textDecoration": "underline"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Conversion Rates",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "20pt",
+                      "textDecoration": "underline"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Family Tracking Tables",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "20pt",
+                      "textDecoration": "underline"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 7,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pipeline Overview'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "underline": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

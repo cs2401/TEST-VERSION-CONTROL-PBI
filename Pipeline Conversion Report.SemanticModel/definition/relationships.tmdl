@@ -1,0 +1,103 @@
+relationship AutoDetected_f35b10f6-ab86-4f6d-a8ab-f522aa4d4c03
+	fromColumn: LineLeader_Tasks.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship AutoDetected_fcf9cdc1-90ee-453a-872a-33d4948ecfee
+	fromColumn: LineLeader_Updates.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship 51215469-a0e3-d11d-fcc6-6b3f8d22294d
+	toCardinality: many
+	fromColumn: LineLeader_Tasks.center_id
+	toColumn: _Services.ServiceId_LL
+
+relationship 61bc516c-62b3-62c3-84ca-0b61a793b174
+	fromColumn: LineLeader_Tasks.'Added Date'
+	toColumn: _Date.Date
+
+relationship 1f3a9030-0399-d478-fd52-d967af9ae154
+	fromColumn: LineLeader_Updates.date_time
+	toColumn: _Date.Date
+
+relationship AutoDetected_b833b65d-8156-4c10-a7c0-c55f867de053
+	fromColumn: LineLeader_IDsForEnquiries.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship AutoDetected_056bac9a-75ff-49a5-9a4c-bc4369f93231
+	isActive: false
+	fromColumn: LineLeader_FamilyChildren.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship 5d8a9aa7-398e-940a-e3ff-221de3de184c
+	fromColumn: LineLeader_IDsForEnquiries.added_date
+	toColumn: _Date.Date
+
+relationship aacb4d76-058c-09ea-64b2-d5df5485564e
+	toCardinality: many
+	fromColumn: LineLeader_IDsForEnquiries.center_id
+	toColumn: _Services.ServiceId_LL
+
+relationship 3513f840-62ce-8dc2-e39e-4d9fda7c3ea4
+	isActive: false
+	fromColumn: LineLeader_Families.added_date
+	toColumn: _Date.Date
+
+relationship 0a46c3a7-2a2d-3c31-4187-2e1bfc7edd71
+	fromColumn: LineLeader_FamilyChildren.added_date
+	toColumn: _Date.Date
+
+relationship 1e5ab93e-cdf6-e612-f926-f3a1fc65cda0
+	toCardinality: many
+	fromColumn: LineLeader_FamilyChildren.CentreID
+	toColumn: _Services.ServiceId_LL
+
+relationship f88436d7-7c09-b178-bd70-3fd284764e4f
+	toCardinality: many
+	fromColumn: LineLeader_Enrollments.center_id
+	toColumn: _Services.ServiceId_LL
+
+relationship 280d8b7c-95e8-2006-1344-54a3c2821326
+	fromColumn: LineLeader_Enrollments.'Opportunity Won Date'
+	toColumn: _Date.Date
+
+relationship ca1f732d-58f2-d542-c85f-eb9e3bd2d372
+	fromColumn: LineLeader_Enrollments.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship c74c68c6-0b5b-69cf-931e-0b274b7f7412
+	fromColumn: LineLeader_Enquiries.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship a567fe1c-c6bb-3c23-d0fd-fe7d0fc9748f
+	fromColumn: LineLeader_Enquiries.FirstDate
+	toColumn: _Date.Date
+
+relationship 95cf1022-6bf4-912b-23c5-3e5ffb8b3620
+	toCardinality: many
+	fromColumn: LineLeader_Enquiries.'LineLeader_Families.center_id'
+	toColumn: _Services.ServiceId_LL
+
+relationship 74ca5e66-4f7d-7dc3-c2bf-0395dc027f3f
+	toCardinality: many
+	fromColumn: LineLeader_Updates.Family_Location
+	toColumn: _Services.ServiceId_LL
+
+relationship 614240ae-5686-3daf-d70a-404d29b0fdef
+	isActive: false
+	fromColumn: TourToConversionPairs.tour_date
+	toColumn: _Date.Date
+
+relationship 6a17dc69-0be9-77d1-5c66-d95639ecd63b
+	fromColumn: LineLeader_FamilyGuardians.family_id
+	toColumn: LineLeader_Families.family_id
+
+relationship 4385c12f-53c9-5399-cd17-5d1f6f1fc58b
+	isActive: false
+	fromColumn: LineLeader_FamilyChildren.family_id
+	toColumn: LineLeader_Enquiries.family_id
+
+relationship 28c7cb29-17e8-73e1-0340-e42645cea4a7
+	isActive: false
+	fromColumn: LineLeader_Updates.'Date Tour Completed (LLTasks)'
+	toColumn: _Date.Date
+

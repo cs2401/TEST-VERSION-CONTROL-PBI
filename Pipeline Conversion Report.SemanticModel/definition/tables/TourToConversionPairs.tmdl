@@ -1,0 +1,133 @@
+table TourToConversionPairs
+	lineageTag: 98de09c7-81a0-4a57-9638-fe91f1838ea8
+
+	column family_id_tour
+		formatString: 0
+		lineageTag: ca72541c-c4bb-471e-a743-23b7aa8ee8e0
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [family_id_tour]
+
+		annotation SummarizationSetBy = Automatic
+
+	column family_id_conv
+		formatString: 0
+		lineageTag: 8e75c9da-cddd-43e3-9c39-a0c31db5bcf8
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [family_id_conv]
+
+		annotation SummarizationSetBy = Automatic
+
+	column tour_date
+		formatString: General Date
+		lineageTag: 460f20f1-09b4-4d78-ae31-5840ebe46d3a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [tour_date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column DT2_conv
+		formatString: General Date
+		lineageTag: 54f0f877-3c92-4edd-9291-e0ff0f863102
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [DT2_conv]
+
+		annotation SummarizationSetBy = Automatic
+
+	column RejectedFilter
+		formatString: General Date
+		lineageTag: 7aa5192d-8fff-4e0d-a06e-1b77dcf5b38b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [RejectedFilter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaysElapsed
+		formatString: 0
+		lineageTag: c965d06a-59d1-4414-92f5-c39d1e8e429d
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [DaysElapsed]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Financial Year'
+		lineageTag: 4145e025-883b-4d0b-b520-5269b4a675d7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Financial Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Centre = lookupvalue(LineLeader_Updates[Centre], LineLeader_Updates[family_id], TourToConversionPairs[family_id_tour])
+		lineageTag: ef9017b4-aad6-48d3-8848-3213ba89825b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TourToConversionPairs = calculated
+		mode: import
+		source =
+				
+				VAR MinDate = MIN(_Date[Date])
+				VAR MaxDate = MAX(_Date[Date])
+				
+				VAR RawPairs =
+				    FILTER (
+				        ADDCOLUMNS (
+				            CROSSJOIN (
+				                // Scheduled Tours
+				                SELECTCOLUMNS (
+				                    FILTER (
+				                        'LineLeader_Updates',
+				                        'LineLeader_Updates'[type] = "Status" &&
+				                        --'LineLeader_Updates'[to] = "4" &&
+				                        Not(Isblank('LineLeader_Updates'[LatestTourAddedDate]))
+				                    ),
+				                    "family_id_tour", [family_id],
+				                    "tour_date", [LatestTourAddedDate],  -- Renamed for clarity
+				                    "RejectedFilter", [DateRejected]
+				                ),
+				                // Conversions
+				                SELECTCOLUMNS (
+				                    FILTER (
+				                        'LineLeader_Updates',
+				                        'LineLeader_Updates'[type] = "Status" &&
+				                        'LineLeader_Updates'[to] IN {"4", "6"} &&
+				                        NOT(ISBLANK('LineLeader_Updates'[LatestTourAddedDate])) &&
+				                        'LineLeader_Updates'[LatestTourAddedDate] >= MinDate &&
+				                        'LineLeader_Updates'[LatestTourAddedDate] <= MaxDate
+				                    ),
+				                    "family_id_conv", [family_id],
+				                    "DT2_conv", [Date Enrolled]
+				                )
+				            ),
+				            "DaysElapsed", DATEDIFF([tour_date], [DT2_conv], DAY),
+				            "Financial Year",
+				                "FY" & FORMAT(
+				                    YEAR([tour_date]) + IF(MONTH([tour_date]) >= 7, 1, 0),
+				                    "0000"
+				                )
+				        ),
+				        [family_id_tour] = [family_id_conv] &&
+				        [DT2_conv] >= [tour_date]
+				    )
+				
+				RETURN
+				SUMMARIZE (
+				    RawPairs,
+				    [family_id_tour],
+				    [family_id_conv],
+				    [tour_date],
+				    [DT2_conv],
+				    [RejectedFilter],
+				    [DaysElapsed],
+				    [Financial Year]
+				)
+
+	annotation PBI_Id = b9288b9f17794b7894cf0031fcba9260
+

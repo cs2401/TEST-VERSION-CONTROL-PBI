@@ -1,0 +1,33 @@
+table ConversionPercentileSlider
+	lineageTag: 8d23f8f0-4f31-407a-bd2a-221790ae445b
+
+	column Value
+		formatString: 0
+		lineageTag: dc464328-1f7d-4742-ad4b-cb619a851752
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Percent
+		lineageTag: fe505328-c0bf-4027-a9d4-9635e25f3c5b
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Percent]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition ConversionPercentileSlider = calculated
+		mode: import
+		source =
+				
+				ADDCOLUMNS(
+				    GENERATESERIES(0, 100, 1),
+				    "Percent", [Value] / 100
+				)
+
+	annotation PBI_Id = 719e65b7dfa7410d8c8085b20fec656a
+

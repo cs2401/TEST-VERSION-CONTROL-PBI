@@ -1,0 +1,228 @@
+table LineLeader_IDsForEnquiries
+	lineageTag: c964eade-2800-48aa-b79f-5af5199de021
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a37926e-e189-48f0-b678-c25e7ffcb8b2
+		summarizeBy: none
+		sourceColumn: family_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c17a10db-49df-4207-b629-385bec1885f6
+		summarizeBy: none
+		sourceColumn: is_active
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c56d639-f535-4524-a0fc-859ba498fdc5
+		summarizeBy: sum
+		sourceColumn: status_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column exported
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 83038c70-66ed-4287-8d1c-44db19207ff4
+		summarizeBy: none
+		sourceColumn: exported
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: de7d34cb-32b6-475d-9cbd-8a54c857d871
+		summarizeBy: none
+		sourceColumn: created_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column added_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d3e74615-bee0-490c-ab2b-97a2037cd2b7
+		summarizeBy: none
+		sourceColumn: added_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'LineLeader_FamilyChildren.family_id'
+		dataType: int64
+		formatString: 0
+		lineageTag: 72e8f061-2c76-49e7-96aa-e3e6216be667
+		summarizeBy: sum
+		sourceColumn: LineLeader_FamilyChildren.family_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_id
+		dataType: string
+		lineageTag: d8ecc3ee-bc9c-498f-b705-0fefd85f72af
+		summarizeBy: none
+		sourceColumn: child_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: f83ed455-0716-42fd-b04d-3a14effc9330
+		summarizeBy: none
+		sourceColumn: name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column system_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f16cbc49-2409-47c0-95ac-e81a56b1e71b
+		summarizeBy: none
+		sourceColumn: system_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column FamiliyID
+		dataType: string
+		lineageTag: 2f268c67-e32a-4c24-b2a4-be7591f9908a
+		summarizeBy: none
+		sourceColumn: FamiliyID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChildID
+		dataType: string
+		lineageTag: fcebc240-1a26-4d37-b3de-58ecd5dec53e
+		summarizeBy: none
+		sourceColumn: ChildID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column IDToCount
+		dataType: string
+		lineageTag: 52f2a63c-cf5b-4d5e-8a8e-223032d16a26
+		summarizeBy: none
+		sourceColumn: IDToCount
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0446385c-dd2b-4922-9528-37310e158edf
+		summarizeBy: none
+		sourceColumn: center_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Source
+		dataType: string
+		lineageTag: 8e5deb2c-c72b-4ab3-9c87-e12a3a916f62
+		summarizeBy: none
+		sourceColumn: Source
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Centre =
+			
+			VAR LocationKey = LineLeader_IDsForEnquiries[center_id]
+			RETURN
+			IF (
+			    ISBLANK(LocationKey),
+			    BLANK(),  // or "Unknown", "Unmapped", etc.
+			    LOOKUPVALUE(
+			        _Services[Short Name],
+			        _Services[ServiceId_LL],
+			        LocationKey
+			    )
+			)
+		lineageTag: f8f8fb65-b5e7-47c7-bcba-fee82d376a2f
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_IDsForEnquiries = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+				    database = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+				    dbo_LineLeaderFamilies = database{[Schema="dbo",Item="LineLeaderFamilies"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(dbo_LineLeaderFamilies, each not Text.Contains([comments], "test")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows",{{"created_date", type date}, {"added_date", type date}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Changed Type", {"family_id"}, LineLeader_FamilyChildren, {"family_id"}, "LineLeader_FamilyChildren", JoinKind.LeftOuter),
+				    #"Expanded LineLeaderFamilyChildren" = Table.ExpandTableColumn(#"Merged Queries", "LineLeader_FamilyChildren", {"family_id"}, {"LineLeader_FamilyChildren.family_id"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded LineLeaderFamilyChildren",{"Id", "LineLeaderOrganisationId", "LastUpdatedDateTimeUtc", "added_by_user_id", "added_by_user_first_name", "added_by_user_last_name", "added_by_user_username", "guid", "custom_type_1_id", "custom_type_1_value", "custom_type_2_id", "custom_type_2_value", "inquiry_type_id", "inquiry_type_value", "source_type_id", "source_type_value", "origin_type_id", "origin_type_value", "do_not_call", "do_not_text", "do_not_email", "do_not_auto_email", "subscription_email_general", "subscription_email_marketing", "subscription_email_service", "subscription_email_urgent", "subscription_text_general", "subscription_text_marketing", "subscription_text_service", "subscription_text_urgent", "comments", "primary_guardian_id", "exported_date", "good_standing"}),
+				    #"Filtered Rows2" = Table.SelectRows(#"Removed Columns", each ([LineLeader_FamilyChildren.family_id] = null)),
+				    #"Removed Duplicates" = Table.Distinct(#"Filtered Rows2", {"family_id"}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Removed Duplicates", each ([status_id] <> 10)),
+				    #"Appended Query" = Table.Combine({#"Filtered Rows1", LineLeader_FamilyChildren}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Appended Query",{"comments", "primary_language", "secondary_language", "immunizations_compliant", "allergies", "medical_conditions", "dietary_requirements", "classroom", "good_standing", "is_child_of_staff", "is_eligible_for_reenrollment", "prior_likes", "prior_dislikes", "prior_situation_comment", "is_sibling_in_care", "Id", "LineLeaderOrganisationId", "LastUpdatedDateTimeUtc", "first_name", "last_name", "preferred_name", "gender", "date_of_birth", "is_estimated_date_of_birth", "status_enrolled_date", "status_enrolled_reason_id", "status_enrolled_reason_value", "status_expected_start_date", "status_is_wait_list_fee_paid", "status_withdrawn_date", "status_withdrawn_reason_id", "status_withdrawn_reason_value", "exported_date"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns1", "Family", each "F"),
+				    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Child", each "Child"),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Added Custom1", "FamiliyID", each Text.Combine({[Family], Text.From([family_id], "en-AU")}, " - "), type text),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Inserted Merged Column",{"Child"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Removed Columns2", "Custom", each if [child_id] = null then null else "C"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Conditional Column",{{"Custom", "Child"}}),
+				    #"Inserted Merged Column1" = Table.AddColumn(#"Renamed Columns", "ChildID", each Text.Combine({Text.From([Child], "en-AU"), Text.From([child_id], "en-AU")}, " - "), type text),
+				    #"Removed Columns3" = Table.RemoveColumns(#"Inserted Merged Column1",{"Family", "Child"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns3",{{"child_id", type text}}),
+				    #"Added Conditional Column1" = Table.AddColumn(#"Changed Type1", "IDToCount", each if [child_id] = null then [FamiliyID] else [ChildID]),
+				    #"Merged Queries1" = Table.NestedJoin(#"Added Conditional Column1", {"family_id"}, LineLeader_Families, {"family_id"}, "LineLeader_Families", JoinKind.LeftOuter),
+				    #"Expanded LineLeaderFamilies" = Table.ExpandTableColumn(#"Merged Queries1", "LineLeader_Families", {"center_id"}, {"LineLeader_Families.center_id"}),
+				    #"Removed Columns4" = Table.RemoveColumns(#"Expanded LineLeaderFamilies",{"center_id"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns4",{{"LineLeader_Families.center_id", "center_id"}}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Renamed Columns1", {"family_id"}, LineLeader_Families, {"family_id"}, "LineLeader_Families", JoinKind.LeftOuter),
+				    #"Expanded LineLeaderFamilies1" = Table.ExpandTableColumn(#"Merged Queries2", "LineLeader_Families", {"source_type_value"}, {"LineLeadeFamilies.source_type_value"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Expanded LineLeaderFamilies1",{{"LineLeadeFamilies.source_type_value", "Source"}})
+				in
+				    #"Renamed Columns2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

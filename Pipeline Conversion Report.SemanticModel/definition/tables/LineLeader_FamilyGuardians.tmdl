@@ -1,0 +1,251 @@
+table LineLeader_FamilyGuardians
+	lineageTag: e83d9599-be97-43f5-b497-c6450d57ea9a
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e4ae851-4e13-4bf0-aa2c-fd18188c5306
+		summarizeBy: none
+		sourceColumn: family_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column guardian_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d2b7371-9ba3-4b56-979e-9f47a5596764
+		summarizeBy: sum
+		sourceColumn: guardian_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 64d5efff-58f1-4f5e-89ad-6833a3ca1c7b
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_name
+		dataType: string
+		lineageTag: 07d2bd7e-6b96-443c-baa3-003a8004d2a8
+		summarizeBy: none
+		sourceColumn: first_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_name
+		dataType: string
+		lineageTag: 0dbe75f6-0c2c-4f4a-8862-85dc6190b336
+		summarizeBy: none
+		sourceColumn: last_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column title
+		dataType: string
+		lineageTag: d646ba23-28b9-4b8c-8eeb-2ef32708e5de
+		summarizeBy: none
+		sourceColumn: title
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: 0b94dcd7-1c0e-4dea-8ab6-504a169b63f8
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_of_birth
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a0443fcc-1d5e-49c7-b027-5610f096583b
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e0078e80-4e8c-42f4-8e34-9e8c9059c249
+		summarizeBy: none
+		sourceColumn: added_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column email
+		dataType: string
+		lineageTag: 609edf50-1846-435e-9308-e376aefa7d29
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = Automatic
+
+	column alternate_email
+		dataType: string
+		lineageTag: 89c8c606-2615-4151-ae0b-206d426416e7
+		summarizeBy: none
+		sourceColumn: alternate_email
+
+		annotation SummarizationSetBy = Automatic
+
+	column relation_to_child
+		dataType: string
+		lineageTag: fd70e404-6473-4643-a48e-21f879600f80
+		summarizeBy: none
+		sourceColumn: relation_to_child
+
+		annotation SummarizationSetBy = Automatic
+
+	column center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1dfc1f1d-2e5e-4d01-9f7c-62897c6e385a
+		summarizeBy: sum
+		sourceColumn: center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column external_system_id
+		dataType: string
+		lineageTag: fc84a9e3-d88a-455a-a737-dbca963772ce
+		summarizeBy: none
+		sourceColumn: external_system_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e2ce3b91-863c-4d18-9cfe-8af03012bae0
+		summarizeBy: sum
+		sourceColumn: status_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column marketing_note
+		dataType: string
+		lineageTag: 7649fb49-ce42-422d-bc91-99f4c9d52286
+		summarizeBy: none
+		sourceColumn: marketing_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column referred_by
+		dataType: string
+		lineageTag: afb05a4b-1608-47cc-aade-a0e69dc70ec1
+		summarizeBy: none
+		sourceColumn: referred_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column prior_likes
+		dataType: string
+		lineageTag: 0ebf18c3-f60c-4747-a08e-5d16f3763cf0
+		summarizeBy: none
+		sourceColumn: prior_likes
+
+		annotation SummarizationSetBy = Automatic
+
+	column prior_dislikes
+		dataType: string
+		lineageTag: ba1fcdc2-5f6b-46fc-a808-a9a72302ae91
+		summarizeBy: none
+		sourceColumn: prior_dislikes
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_phone_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bbd499a3-daad-47de-bda1-674cee7d892a
+		summarizeBy: sum
+		sourceColumn: primary_phone_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_phone_type_value
+		dataType: string
+		lineageTag: 38bfe541-36e8-487c-bdae-9255aedfa943
+		summarizeBy: none
+		sourceColumn: primary_phone_type_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_phone_country_code
+		dataType: string
+		lineageTag: cb13d0c2-0ce9-4061-96be-35522950171f
+		summarizeBy: none
+		sourceColumn: primary_phone_country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_phone_number
+		dataType: string
+		lineageTag: efbac7ad-8619-4aef-82da-cfaa15548fda
+		summarizeBy: none
+		sourceColumn: primary_phone_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_phone_number_e164
+		dataType: string
+		lineageTag: ba5111d5-f548-44d6-9297-2f05ecb8ba54
+		summarizeBy: none
+		sourceColumn: primary_phone_number_e164
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_phone_extension
+		dataType: string
+		lineageTag: 217cee60-49f4-4284-aa89-20c3a4d3563a
+		summarizeBy: none
+		sourceColumn: primary_phone_extension
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f6eb4be-a57c-41dd-b9ab-4617f946d2f9
+		summarizeBy: count
+		sourceColumn: Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: 395cf1ad-98a5-48e2-ac04-f35c591d4352
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 733f8038-b79d-4a0b-8848-93c70f01b9d5
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_FamilyGuardians = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderFamilyGuardians = Source{[Schema="dbo",Item="LineLeaderFamilyGuardians"]}[Data]
+				in
+				    dbo_LineLeaderFamilyGuardians
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

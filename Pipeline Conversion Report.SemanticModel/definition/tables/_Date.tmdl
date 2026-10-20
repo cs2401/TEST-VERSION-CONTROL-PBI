@@ -1,0 +1,720 @@
+table _Date
+	lineageTag: 623450e0-aaf2-4407-b492-150bcad3dc07
+	dataCategory: Time
+
+	measure Max_EndOfWeek =
+			
+			MAX ( _Date[End of Week] )
+		formatString: General Date
+		lineageTag: 9540f99d-f8cd-4873-99e0-0efc1b3da690
+
+		changedProperty = IsHidden
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 0de28ac1-907a-4e1f-a389-a34cc2832558
+		summarizeBy: none
+		sourceColumn: Date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: c7be76fd-ce08-42ce-b44a-14e898efed74
+		summarizeBy: none
+		sourceColumn: Year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Start of Year'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ee83cd43-73b9-4b75-acba-c0eca3892d08
+		summarizeBy: none
+		sourceColumn: Start of Year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'End of Year'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 337900c7-b2e5-4bf4-a8be-722212dca15b
+		summarizeBy: none
+		sourceColumn: End of Year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 1cee7c98-a3a2-4094-92ee-48bd8c6b07eb
+		summarizeBy: none
+		sourceColumn: Month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Start of Month'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 09005145-327b-4151-9258-c286664d9339
+		summarizeBy: none
+		sourceColumn: Start of Month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'End of Month'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d82760f9-8250-4f1d-b1aa-3774c19e5d59
+		summarizeBy: none
+		sourceColumn: End of Month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Days in Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3434c827-cae3-45af-aec1-c91b91a0b26d
+		summarizeBy: none
+		sourceColumn: Days in Month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: 22fe3ae2-5577-49d6-b516-226ada04914d
+		summarizeBy: none
+		sourceColumn: Day
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Day Name'
+		dataType: string
+		lineageTag: 78da9e4e-d2b1-4d4a-8008-891d20097dac
+		summarizeBy: none
+		sourceColumn: Day Name
+		sortByColumn: 'Day of Week'
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: 950b05f7-b1f6-4c41-b43e-7cc32268a958
+		summarizeBy: none
+		sourceColumn: Day of Week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Day of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: fbaafdeb-3c95-4cf4-807c-e3f95aba32ed
+		summarizeBy: none
+		sourceColumn: Day of Year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: cd15dcef-e96e-4b0b-8460-8c758c2b61d5
+		summarizeBy: none
+		sourceColumn: Month Name
+		sortByColumn: 'Fiscal Month'
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 559c79d8-ecb3-44af-b309-a58292c1a96b
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Start of Quarter'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 68e2bf56-83a7-49d9-8d9d-ae5569977020
+		summarizeBy: none
+		sourceColumn: Start of Quarter
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'End of Quarter'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8427a91d-4355-4e9c-98d8-c35a33fc152d
+		summarizeBy: none
+		sourceColumn: End of Quarter
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Week of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: eb6ae964-884c-4990-bce4-23616d65bc36
+		summarizeBy: sum
+		sourceColumn: Week of Year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week of Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: e339ad10-eebc-4467-bd1d-7b0e099ed651
+		summarizeBy: none
+		sourceColumn: Week of Month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Start of Week'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cb15e8fa-df31-45a3-b23a-4ff2ed0159ac
+		summarizeBy: none
+		sourceColumn: Start of Week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'End of Week'
+		dataType: dateTime
+		formatString: dd-mmm-yyyy
+		lineageTag: ff6b69f6-3d16-42be-a3ae-29faf70bba60
+		summarizeBy: none
+		sourceColumn: End of Week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: d9e5b4cf-72fb-4637-a2bc-5fdfbef2bf14
+		summarizeBy: none
+		sourceColumn: Fiscal Year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Fiscal Quarter'
+		dataType: int64
+		formatString: 0
+		lineageTag: e2a76f93-ca2c-4088-9e11-69c044b91329
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Fiscal Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3df4dafb-5037-4bfd-aee1-170c632371cd
+		summarizeBy: none
+		sourceColumn: Fiscal Month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Day Offset'
+		dataType: int64
+		formatString: 0
+		lineageTag: bfa07ed3-9fda-44c3-8f3d-bd807f88ad15
+		summarizeBy: none
+		sourceColumn: Day Offset
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Offset'
+		dataType: int64
+		formatString: 0
+		lineageTag: a7a92604-a81d-4c69-a718-334f678e56a6
+		summarizeBy: none
+		sourceColumn: Month Offset
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Offset'
+		dataType: int64
+		formatString: 0
+		lineageTag: 06abf540-2bd6-4e6f-b0a8-79e56b2582ff
+		summarizeBy: none
+		sourceColumn: Year Offset
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Quarter Offset'
+		dataType: int64
+		formatString: 0
+		lineageTag: 7bad0426-516f-45f1-bc30-edf65c7e3099
+		summarizeBy: none
+		sourceColumn: Quarter Offset
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column Year-Month
+		dataType: string
+		lineageTag: 5e5de837-8513-42c7-b37e-d898158dd5b9
+		summarizeBy: none
+		sourceColumn: Year-Month
+		sortByColumn: 'Year-Month Code'
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year-Month Code'
+		dataType: int64
+		formatString: 0
+		lineageTag: 30094387-1a73-4896-b6aa-725966872739
+		summarizeBy: none
+		sourceColumn: Year-Month Code
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Day Text'
+		dataType: string
+		lineageTag: 1337a591-5ddb-4c81-8005-f0ad3f1d6351
+		summarizeBy: none
+		sourceColumn: Day Text
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiscalYearStart
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a081e5b1-b1c5-4d79-b0a9-44cce51f0b99
+		summarizeBy: none
+		sourceColumn: FiscalYearStart
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DaysSinceFiscalStart
+		dataType: double
+		lineageTag: 6d82a0c8-3624-4843-ad0d-a95f20ae5873
+		summarizeBy: sum
+		sourceColumn: DaysSinceFiscalStart
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column FiscalWeekNumber
+		dataType: double
+		lineageTag: c954ae33-72e3-4baa-b876-6689cf752c41
+		summarizeBy: sum
+		sourceColumn: FiscalWeekNumber
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column FiscalYearWeek
+		dataType: int64
+		formatString: 0
+		lineageTag: 4222b6e3-5ea6-46ab-b5ae-809bd8dfe948
+		summarizeBy: sum
+		sourceColumn: FiscalYearWeek
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column isPast =
+			
+			IF ( _Date[End of Week] < TODAY(), 1, 0 )
+		formatString: 0
+		lineageTag: 140ff629-cccb-4692-a880-cbe343e1661a
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column isUpTo3MonthsFromToday =
+			
+			VAR _3MonthsFromToday = EDATE ( TODAY(), 3 )
+			RETURN
+			IF ( _Date[Date] <= _3MonthsFromToday, 1, 0 )
+		formatString: 0
+		lineageTag: e9a467e2-cd72-4159-9fc1-14bee03ac232
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column isCurrentWeek =
+			
+			VAR _startOfWeek = LOOKUPVALUE(_Date[Start of Week], _Date[Date], TODAY() )
+			VAR _endOfWeek = LOOKUPVALUE(_Date[End of Week], _Date[Date], TODAY() )
+			RETURN
+			IF ( _Date[Date] >= _startOfWeek && _Date[Date] <= _endOfWeek, 1, 0 )
+		formatString: 0
+		lineageTag: 57a75a24-2295-4586-a287-b98941846ac4
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Ending Slicer' = IF ( _Date[isCurrentWeek] = 1, "Current Week", FORMAT ( _Date[End of Week], "DD-MMM-YYYY"))
+		lineageTag: 63aecc44-e117-4565-890a-df98f73c6e86
+		summarizeBy: none
+		sortByColumn: 'End of Week'
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column isCurrentMonth =
+			
+			VAR _startOfMonth= LOOKUPVALUE(_Date[Start of Month], _Date[Date], TODAY() )
+			VAR _endOfMonth = LOOKUPVALUE(_Date[End of Month], _Date[Date], TODAY() )
+			RETURN
+			IF ( _Date[Date] >= _startOfMonth && _Date[Date] <= _endOfMonth, 1, 0 )
+		formatString: 0
+		lineageTag: d1baf70a-126b-4513-b63d-fb3bf17dee96
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Slicer' = IF ( _Date[isCurrentMonth] = 1, "Current Month", FORMAT(_Date[Year-Month], "MMM YYYY") )
+		lineageTag: 202ade25-ffae-4dcd-89af-ae3c4c327994
+		summarizeBy: none
+		sortByColumn: 'Year-Month Code'
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'One Year Prior' = EDATE ( _Date[Date], -12 )
+		formatString: General Date
+		lineageTag: 4a826211-a75a-4906-93fa-86a563e14a92
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Month Year' = LEFT ( _Date[Month Name], 3 ) & " " & _Date[Fiscal Year]
+		lineageTag: c85e5d8f-f03b-418b-ad92-da76df48e01c
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'End of Previous Week' = DATEADD ( _Date[End of Week], -7, DAY )
+		formatString: Long Date
+		lineageTag: bfc50487-a587-4a31-ba37-05a2e591879b
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CurrentWeek_EndOfWeekDate = IF ( SELECTEDVALUE ( _Date[Week Ending Slicer] ) = "Current Week", MAX(_Date[End of Week]), BLANK())
+		dataType: dateTime
+		formatString: dd-mmm-yy
+		lineageTag: b0993ac4-a39a-4932-a6e0-dc22a6f42593
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column isWeekday = IF ( _Date[Day of Week] <= 4, 1, 0 )
+		formatString: 0
+		lineageTag: cf68a5e7-4f9a-4168-bcd7-4763b3a3310e
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column isUpTo2MonthsFromToday =
+			
+			VAR _2MonthsFromToday = EDATE ( TODAY(), 2 )
+			RETURN
+			IF ( _Date[Date] <= _2MonthsFromToday, 1, 0 )
+		formatString: 0
+		lineageTag: 1c4717ae-6093-4fe9-8b5b-324b3e38507b
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date_Slicer = IF ( _Date[Date] = TODAY() - 1, "Yesterday", FORMAT(_Date[Date], "Long Date" ) )
+		lineageTag: c9b6c1e4-d245-4292-856d-8ece9a985c3b
+		summarizeBy: none
+		sortByColumn: 'Date Sort Desc'
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Sort Desc' = 30000000 - FORMAT ( _Date[Date], "YYYYMMDD" )
+		lineageTag: d466f665-56a4-4623-83b5-5a4a6854009b
+		summarizeBy: sum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NextWeekDay = ```
+			
+			VAR CurrentDay = WEEKDAY(_Date[Date], 2) // Monday = 1, Sunday = 7
+			RETURN 
+			    IF(CurrentDay = 5, _Date[Date] + 3, _Date[Date] + 1)
+			```
+		formatString: General Date
+		lineageTag: 5c8e7f5f-e4a4-404a-8876-22824adb41fa
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PreviousDay = ```
+			
+			VAR CurrentDay = WEEKDAY(_Date[Date], 2) // Monday = 1, Sunday = 7
+			RETURN 
+			    IF(CurrentDay = 1, _Date[Date] - 3, _Date[Date] - 1)
+			```
+		formatString: General Date
+		lineageTag: 7c1c5206-010e-4b3d-a274-3d2b301f5734
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year Name' = "FY" & RIGHT( _Date[Fiscal Year] , 2 )
+		lineageTag: a2548c93-55ac-4c30-aaa6-55a5b5d9dc62
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Short' = ```
+			LEFT( _Date[Month Name] , 3 ) 
+			```
+		lineageTag: ddaaab65-eb69-46d4-9208-db9c211b6755
+		summarizeBy: none
+		sortByColumn: 'Fiscal Month'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Current Date'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 954303f4-de15-4fd5-baf7-2ee93453df05
+		summarizeBy: none
+		sourceColumn: Current Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Date = m
+		mode: import
+		queryGroup: Combined
+		source = ```
+				let
+				    // configurations start
+				    Today=Date.From(DateTime.LocalNow()), // today's date
+				    FromYear = 2023, // set the start year of the date dimension. dates start from 1st of January of this year
+				    ToYear=Date.Year(DateTime.LocalNow()),
+				    StartofFiscalYear=7, // set the month number that is start of the financial year. example; if fiscal year start is July, value is 7
+				    firstDayofWeek=Day.Monday, // set the week's start day, values: Day.Monday, Day.Sunday....
+				    // configuration end
+				    FromDate=#date(FromYear,1,1),
+				    currentDateTime = DateTime.LocalNow(),
+				    dateThirteenMonthsLater=Date.AddMonths(currentDateTime, 13),
+				    ToDate=Date.From(dateThirteenMonthsLater),
+				    Source=List.Dates(
+				        FromDate,
+				        Duration.Days(ToDate-FromDate)+1,
+				        #duration(1,0,0,0)
+				    ),
+				    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Date"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Date", type date}}),
+				    #"Inserted Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([Date]), Int64.Type),
+				    #"Inserted Start of Year" = Table.AddColumn(#"Inserted Year", "Start of Year", each Date.StartOfYear([Date]), type date),
+				    #"Inserted End of Year" = Table.AddColumn(#"Inserted Start of Year", "End of Year", each Date.EndOfYear([Date]), type date),
+				    #"Inserted Month" = Table.AddColumn(#"Inserted End of Year", "Month", each Date.Month([Date]), Int64.Type),
+				    #"Inserted Start of Month" = Table.AddColumn(#"Inserted Month", "Start of Month", each Date.StartOfMonth([Date]), type date),
+				    #"Inserted End of Month" = Table.AddColumn(#"Inserted Start of Month", "End of Month", each Date.EndOfMonth([Date]), type date),
+				    #"Inserted Days in Month" = Table.AddColumn(#"Inserted End of Month", "Days in Month", each Date.DaysInMonth([Date]), Int64.Type),
+				    #"Inserted Day" = Table.AddColumn(#"Inserted Days in Month", "Day", each Date.Day([Date]), Int64.Type),
+				    #"Inserted Day Name" = Table.AddColumn(#"Inserted Day", "Day Name", each Date.DayOfWeekName([Date]), type text),
+				    #"Inserted Day of Week" = Table.AddColumn(#"Inserted Day Name", "Day of Week", each Date.DayOfWeek([Date],firstDayofWeek), Int64.Type),
+				    #"Inserted Day of Year" = Table.AddColumn(#"Inserted Day of Week", "Day of Year", each Date.DayOfYear([Date]), Int64.Type),
+				    #"Inserted Month Name" = Table.AddColumn(#"Inserted Day of Year", "Month Name", each Date.MonthName([Date]), type text),
+				    #"Inserted Quarter" = Table.AddColumn(#"Inserted Month Name", "Quarter", each Date.QuarterOfYear([Date]), Int64.Type),
+				    #"Inserted Start of Quarter" = Table.AddColumn(#"Inserted Quarter", "Start of Quarter", each Date.StartOfQuarter([Date]), type date),
+				    #"Inserted End of Quarter" = Table.AddColumn(#"Inserted Start of Quarter", "End of Quarter", each Date.EndOfQuarter([Date]), type date),
+				    
+				    AddFiscalYearStart = Table.AddColumn(#"Inserted End of Quarter", "FiscalYearStart", each if Date.Month([Date]) >= 7 then #date(Date.Year([Date]), 7, 1) else #date(Date.Year([Date]) - 1, 7, 1), type date),
+				    AddDaysSinceFiscalStart = Table.AddColumn(AddFiscalYearStart, "DaysSinceFiscalStart", each Duration.Days([Date] - [FiscalYearStart]), type number),
+				    AddFiscalWeekNumber = Table.AddColumn(AddDaysSinceFiscalStart, "FiscalWeekNumber", each Number.RoundDown([DaysSinceFiscalStart] / 7) + 1, type number),
+				   
+				    #"Inserted Week of Year" = Table.AddColumn(AddFiscalWeekNumber, "Week of Year", each Date.WeekOfYear([Date],firstDayofWeek), Int64.Type),
+				   
+				    #"Inserted Week of Month" = Table.AddColumn(#"Inserted Week of Year", "Week of Month", each Date.WeekOfMonth([Date],firstDayofWeek), Int64.Type),
+				    #"Inserted Start of Week" = Table.AddColumn(#"Inserted Week of Month", "Start of Week", each Date.StartOfWeek([Date],firstDayofWeek), type date),
+				    #"Inserted End of Week" = Table.AddColumn(#"Inserted Start of Week", "End of Week", each Date.EndOfWeek([Date],firstDayofWeek), type date),
+				    FiscalMonthBaseIndex=13-StartofFiscalYear,
+				    adjustedFiscalMonthBaseIndex=if(FiscalMonthBaseIndex>=12 or FiscalMonthBaseIndex<0) then 0 else FiscalMonthBaseIndex,
+				    #"Added Custom" = Table.AddColumn(#"Inserted End of Week", "FiscalBaseDate", each Date.AddMonths([Date],adjustedFiscalMonthBaseIndex)),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"FiscalBaseDate", type date}}),
+				    #"Inserted Year1" = Table.AddColumn(#"Changed Type1", "Year.1", each Date.Year([FiscalBaseDate]), Int64.Type),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Inserted Year1",{{"Year.1", "Fiscal Year"}}),
+				    #"Inserted Quarter1" = Table.AddColumn(#"Renamed Columns1", "Quarter.1", each Date.QuarterOfYear([FiscalBaseDate]), Int64.Type),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Inserted Quarter1",{{"Quarter.1", "Fiscal Quarter"}}),
+				    #"Inserted Month1" = Table.AddColumn(#"Renamed Columns2", "Month.1", each Date.Month([FiscalBaseDate]), Int64.Type),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Inserted Month1",{{"Month.1", "Fiscal Month"}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns3",{"FiscalBaseDate"}),
+				    #"Inserted Age" = Table.AddColumn(#"Removed Columns", "Age", each [Date]-Today, type duration),
+				    #"Extracted Days" = Table.TransformColumns(#"Inserted Age",{{"Age", Duration.Days, Int64.Type}}),
+				    #"Renamed Columns4" = Table.RenameColumns(#"Extracted Days",{{"Age", "Day Offset"}}),
+				    #"Added Custom1" = Table.AddColumn(#"Renamed Columns4", "Month Offset", each (([Year]-Date.Year(Today))*12)
+				+([Month]-Date.Month(Today))),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom1",{{"Month Offset", Int64.Type}}),
+				    #"Added Custom2" = Table.AddColumn(#"Changed Type2", "Year Offset", each [Year]-Date.Year(Today)),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom2",{{"Year Offset", Int64.Type}}),
+				    #"Added Custom3" = Table.AddColumn(#"Changed Type3", "Quarter Offset", each (([Year]-Date.Year(Today))*4)
+				+([Quarter]-Date.QuarterOfYear(Today))),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Added Custom3",{{"Quarter Offset", Int64.Type}}),
+				    #"Added Custom4" = Table.AddColumn(#"Changed Type4", "Year-Month", each Date.ToText([Date],"MMM yyyy")),
+				    #"Added Custom5" = Table.AddColumn(#"Added Custom4", "Year-Month Code", each Date.ToText([Date],"yyyyMM")),
+				    #"Changed Type5" = Table.TransformColumnTypes(#"Added Custom5",{{"Year-Month", type text}, {"Year-Month Code", Int64.Type}}),
+				    #"Added Custom6" = Table.AddColumn(#"Changed Type5", "Day Text", each Number.ToText([Year]) & "-" & Number.ToText([Month], "D2") & "-" & Number.ToText([Day], "D2")),
+				    #"Sorted Rows" = Table.Sort(#"Added Custom6",{{"Date", Order.Descending}}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Sorted Rows", "FiscalWeekNumber", "FiscalWeekNumber - Copy"),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Duplicated Column", "Fiscal Year", "Fiscal Year - Copy"),
+				    #"Merged Columns" = Table.CombineColumns(Table.TransformColumnTypes(#"Duplicated Column1", {{"Fiscal Year - Copy", type text},{"FiscalWeekNumber - Copy", type text}}, "en-AU"),{"Fiscal Year - Copy","FiscalWeekNumber - Copy"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"FiscalYearWeek"),
+				#"Changed Type6" = Table.TransformColumnTypes(#"Merged Columns",{{"FiscalYearWeek", Int64.Type}}),
+				
+				// Add Current Date (static across all rows)
+				#"Added Current Date" = Table.AddColumn(#"Changed Type6", "Current Date", each DateTime.FixedLocalNow(), type datetime)
+				in
+				    #"Added Current Date"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

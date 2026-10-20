@@ -1,0 +1,161 @@
+table LineLeader_Enquiries
+	lineageTag: f13b6671-6601-42dd-bd45-12ca1bde4390
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3a3e6c74-6bd0-48b0-8807-f5bba1347c92
+		summarizeBy: none
+		sourceColumn: family_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'LineLeader_Families.center_id'
+		dataType: int64
+		formatString: 0
+		lineageTag: 327cdb02-d8fd-45f4-9042-1abff1a2086f
+		summarizeBy: none
+		sourceColumn: LineLeader_Families.center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 0e02a767-44c8-4e00-8d9d-7c60cdeba762
+		summarizeBy: none
+		sourceColumn: FirstDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'No Update Flag' =
+			
+			VAR fid = LineLeader_Enquiries[family_id]
+			VAR Matches =
+			    COUNTROWS (
+			        FILTER (
+			            LineLeader_Updates,
+			            LineLeader_Updates[family_id] = fid
+			                && LineLeader_Updates[type] = "Status"
+			                && VALUE ( TRIM ( LineLeader_Updates[to] ) ) IN { 11, 3, 4, 6 }
+			        )
+			    )
+			RETURN
+			IF ( Matches = 0, 1, 0 )
+		formatString: 0
+		lineageTag: b89754c3-d594-4ed0-b849-c3cb0fbf304b
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Child Name' = ```
+			
+			VAR ChildrenForFamily =
+			    FILTER (
+			        LineLeader_FamilyChildren,
+			        LineLeader_FamilyChildren[family_id] = LineLeader_Enquiries[family_id]
+			    )
+			VAR EnrichedChildren =
+			    ADDCOLUMNS (
+			        ChildrenForFamily,
+			        "_Full", LineLeader_FamilyChildren[name],
+			        // First = text before first space (or whole name if single-token)
+			        "_First",
+			            VAR _n = LineLeader_FamilyChildren[name]
+			            VAR _pos = FIND ( " ", _n & " ", 1, 0 )
+			            RETURN IF ( _pos = 0, _n, LEFT ( _n, _pos - 1 ) ),
+			        // Last = text after last space (blank if single-token)
+			        "_Last",
+			            VAR _n = LineLeader_FamilyChildren[name]
+			            VAR _spaces = LEN ( _n ) - LEN ( SUBSTITUTE ( _n, " ", "" ) )
+			            VAR _lastPos =
+			                FIND ( "|", SUBSTITUTE ( _n, " ", "|", _spaces ), 1, 0 )
+			            RETURN IF ( _lastPos = 0, BLANK (), RIGHT ( _n, LEN ( _n ) - _lastPos ) )
+			    )
+			VAR FirstTwo =
+			    TOPN ( 2, EnrichedChildren, [_Full], ASC )
+			VAR ChildCount = COUNTROWS ( FirstTwo )
+			
+			// deterministically pick row 1 and row 2 by [_Full] ascending
+			VAR Row1 = TOPN ( 1, FirstTwo, [_Full], ASC )
+			VAR Row2 = EXCEPT ( FirstTwo, Row1 )
+			
+			VAR C1_First = MAXX ( Row1, [_First] )
+			VAR C1_Last  = MAXX ( Row1, [_Last] )
+			VAR C1_Full  = MAXX ( Row1, [_Full] )
+			
+			VAR C2_First = MAXX ( Row2, [_First] )
+			VAR C2_Last  = MAXX ( Row2, [_Last] )
+			VAR C2_Full  = MAXX ( Row2, [_Full] )
+			
+			// NEW: consider duplicates; EXCEPT can drop a duplicate row, leaving Row2 empty
+			VAR DedupSameFullName =
+			    ChildCount >= 2 && ( ISBLANK ( C2_Full ) || C1_Full = C2_Full )
+			
+			VAR SameLast = NOT ISBLANK ( C1_Last ) && C1_Last = C2_Last
+			
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    ChildCount = 0, BLANK (),
+			    ChildCount = 1, C1_Full,
+			    DedupSameFullName, C1_Full,                                 // <-- fix trailing " & "
+			    SameLast, C1_First & " & " & C2_First & " " & C1_Last,
+			    C1_Full & " & " & C2_Full
+			)
+			
+			```
+		lineageTag: 0bfaa12a-0aea-4756-b994-0b88200f33f1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_Enquiries = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderUpdates = Source{[Schema="dbo",Item="LineLeaderUpdates"]}[Data],
+				
+				    // Keep only Status rows from updates (same filter logic as before)
+				    #"Filtered Rows" = Table.SelectRows(dbo_LineLeaderUpdates, each ([type] = "Status")),
+				
+				    // Join to LineLeader_Families to access added_date
+				    #"Merged Queries" = Table.NestedJoin(#"Filtered Rows", {"family_id"}, LineLeader_Families, {"family_id"}, "LineLeader_Families", JoinKind.LeftOuter),
+				
+				    // Expand center_id and added_date from the families table
+				    #"Expanded LineLeader_Families" = Table.ExpandTableColumn(
+				        #"Merged Queries",
+				        "LineLeader_Families",
+				        {"center_id", "added_date"},
+				        {"LineLeader_Families.center_id", "LineLeader_Families.added_date"}
+				    ),
+				
+				    // Ensure added_date is a date (strip time if present)
+				    #"Cast added_date to date" = Table.TransformColumns(
+				        #"Expanded LineLeader_Families",
+				        {{"LineLeader_Families.added_date", DateTime.Date, type date}}
+				    ),
+				
+				    // Use earliest added_date as FirstDate
+				    #"Grouped Rows" = Table.Group(
+				        #"Cast added_date to date",
+				        {"family_id", "LineLeader_Families.center_id"},
+				        {
+				            {"Count", each Table.RowCount(_), Int64.Type},
+				            {"FirstDate", each List.Min([LineLeader_Families.added_date]), type date}
+				        }
+				    ),
+				
+				    #"Removed Columns" = Table.RemoveColumns(#"Grouped Rows",{"Count"}),
+				    #"Sorted Rows" = Table.Sort(#"Removed Columns",{{"FirstDate", Order.Ascending}})
+				in
+				    #"Sorted Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

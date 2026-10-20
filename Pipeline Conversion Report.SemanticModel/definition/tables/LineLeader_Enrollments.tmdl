@@ -1,0 +1,491 @@
+table LineLeader_Enrollments
+	lineageTag: dc873fbb-6ab3-40a9-9e51-f0d4c09172f9
+
+	column enrollment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c18b6978-360e-4630-a36c-82e9e78fc08b
+		summarizeBy: sum
+		sourceColumn: enrollment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 188f88ea-cac6-4dc4-8ed5-5e58e81932ca
+		summarizeBy: sum
+		sourceColumn: child_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 773610fa-3c8b-4bfe-86dc-440d20421783
+		summarizeBy: none
+		sourceColumn: family_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d645bf9a-60cd-4aec-a0a8-b8e1874bc062
+		summarizeBy: none
+		sourceColumn: center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column classroom_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 25390d6a-96cd-4ede-9e1b-7eea0c849a94
+		summarizeBy: sum
+		sourceColumn: classroom_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column classroom_name
+		dataType: string
+		lineageTag: ab3b19b6-f291-408b-8973-0ced5db54cf0
+		summarizeBy: none
+		sourceColumn: classroom_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_of_staff
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a0a7de2d-3e53-4dfc-a7d9-63a03c7f8682
+		summarizeBy: none
+		sourceColumn: child_of_staff
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_monday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bbc88337-1099-4962-93f2-d2138f59ef16
+		summarizeBy: none
+		sourceColumn: schedule_monday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_monday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c51ece4a-53b8-45de-8fb7-1dc962731468
+		summarizeBy: none
+		sourceColumn: schedule_monday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_tuesday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b8cdb85f-4a1e-47df-a6b9-5125e145df73
+		summarizeBy: none
+		sourceColumn: schedule_tuesday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_tuesday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c1ca2b86-c6a8-4f38-bb26-64b55c34c309
+		summarizeBy: none
+		sourceColumn: schedule_tuesday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_wednesday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 596e3d07-f6b1-40ac-99c4-cd98dd74f0ba
+		summarizeBy: none
+		sourceColumn: schedule_wednesday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_wednesday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1dfe8b98-5455-428a-94e8-6c537c2c6e07
+		summarizeBy: none
+		sourceColumn: schedule_wednesday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_thursday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 269d591f-24b0-4a53-9690-11a432059b45
+		summarizeBy: none
+		sourceColumn: schedule_thursday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_thursday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 0a785991-7195-405c-953d-9010b94992a3
+		summarizeBy: none
+		sourceColumn: schedule_thursday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_friday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 748f4969-e85f-40f1-ae4a-78f1d8416850
+		summarizeBy: none
+		sourceColumn: schedule_friday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_friday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 074ca833-2d4f-4829-8e3c-40f23283a98b
+		summarizeBy: none
+		sourceColumn: schedule_friday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_saturday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ee544f1a-542b-4ac5-aa4a-eca2feb26c89
+		summarizeBy: none
+		sourceColumn: schedule_saturday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_saturday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 639339c5-e778-4c03-8f98-37b47b2dac65
+		summarizeBy: none
+		sourceColumn: schedule_saturday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_sunday_am
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3e15cd75-085b-4a53-af1e-23ada4e365b2
+		summarizeBy: none
+		sourceColumn: schedule_sunday_am
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_sunday_pm
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f3a9322e-ac46-4b0c-9fc1-5daf49304be9
+		summarizeBy: none
+		sourceColumn: schedule_sunday_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_priority
+		dataType: string
+		lineageTag: 7ed08f17-ceb9-4aad-9156-15c099458a29
+		summarizeBy: none
+		sourceColumn: wait_list_priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_fee
+		dataType: string
+		lineageTag: 9d47fd90-b799-4d63-bf08-dd114276da5d
+		summarizeBy: none
+		sourceColumn: wait_list_fee
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_is_fee_paid
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 04b67881-7e71-42a8-b88e-038c4e9b5e16
+		summarizeBy: none
+		sourceColumn: wait_list_is_fee_paid
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_fee_paid_datetime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b3ab244a-2feb-4a9e-b518-aee881535a4b
+		summarizeBy: none
+		sourceColumn: wait_list_fee_paid_datetime
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_child_of_staff
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f9e4995a-473a-43a5-a833-04a1f8c5a04a
+		summarizeBy: none
+		sourceColumn: wait_list_child_of_staff
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_sibling_in_care
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: efb90862-bed3-4c52-82e6-e473dab83c99
+		summarizeBy: none
+		sourceColumn: wait_list_sibling_in_care
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_type
+		dataType: string
+		lineageTag: adb28d97-a669-4612-97e4-15ad64a830ff
+		summarizeBy: none
+		sourceColumn: wait_list_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_reason_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 28dd06d1-08a1-4dfd-a752-05ee4597c616
+		summarizeBy: sum
+		sourceColumn: wait_list_reason_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_reason_name
+		dataType: string
+		lineageTag: f3925628-ee36-4729-8505-2bd72c174d0c
+		summarizeBy: none
+		sourceColumn: wait_list_reason_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_is_current_status
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2b206191-ae09-4bb5-9083-c3400e8062c8
+		summarizeBy: none
+		sourceColumn: wait_list_is_current_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_comments
+		dataType: string
+		lineageTag: 8320b60e-6529-424f-a833-d007da3e0e1b
+		summarizeBy: none
+		sourceColumn: wait_list_comments
+
+		annotation SummarizationSetBy = Automatic
+
+	column wait_list_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e253abda-d181-4b0d-9523-eb9f77e77d67
+		summarizeBy: none
+		sourceColumn: wait_list_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column register_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: affff162-35e4-4d56-bc50-ddaa455ddb5f
+		summarizeBy: none
+		sourceColumn: register_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_start_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1957d1a5-dd68-4342-892f-37a02ac4fa78
+		summarizeBy: none
+		sourceColumn: expected_start_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_enrollment_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4225c446-0e5a-49c3-b8f5-f3c43bc49c69
+		summarizeBy: none
+		sourceColumn: expected_enrollment_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_enrollment_reason
+		dataType: string
+		lineageTag: bf21f739-e47b-4338-919b-737fdcdf2b33
+		summarizeBy: none
+		sourceColumn: expected_enrollment_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_enrollment_is_current_status
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 15b1ef53-88f8-4593-b53a-c5595b8f43ce
+		summarizeBy: none
+		sourceColumn: expected_enrollment_is_current_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_enrollment_comments
+		dataType: string
+		lineageTag: 11301581-6853-495c-a849-c2b1c4fc706d
+		summarizeBy: none
+		sourceColumn: expected_enrollment_comments
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrollment_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a49c8fcb-2100-4efe-8e77-71cd04c4d66e
+		summarizeBy: none
+		sourceColumn: enrollment_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrollment_reason
+		dataType: string
+		lineageTag: 8213518b-1c28-4741-92ad-1705ca1990fc
+		summarizeBy: none
+		sourceColumn: enrollment_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrollment_is_current_status
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 46e7f21c-7a2e-48ad-91f3-5750e2ce007c
+		summarizeBy: none
+		sourceColumn: enrollment_is_current_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrollment_comments
+		dataType: string
+		lineageTag: 82191353-a9f7-425f-b892-5b98274ed60a
+		summarizeBy: none
+		sourceColumn: enrollment_comments
+
+		annotation SummarizationSetBy = Automatic
+
+	column lost_opportunity_reason_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 9ea0594b-2a02-4174-adb2-f58d971c77fb
+		summarizeBy: sum
+		sourceColumn: lost_opportunity_reason_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column lost_opportunity_reason_name
+		dataType: string
+		lineageTag: 47b3889e-446b-44df-b016-6c9d27e65ecf
+		summarizeBy: none
+		sourceColumn: lost_opportunity_reason_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column lost_opportunity_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2f67ba70-812c-40cc-98b8-cf08fe8b28a0
+		summarizeBy: none
+		sourceColumn: lost_opportunity_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column lost_opportunity_reason
+		dataType: string
+		lineageTag: f90ac06e-b33e-4f33-ba51-00ebf8a509a6
+		summarizeBy: none
+		sourceColumn: lost_opportunity_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column lost_opportunity_is_current_status
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: cd412dd8-539b-45ab-b1a0-343bd37dcb75
+		summarizeBy: none
+		sourceColumn: lost_opportunity_is_current_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column lost_opportunity_comments
+		dataType: string
+		lineageTag: feb4fc25-5367-4ef3-94ca-35c20c25f295
+		summarizeBy: none
+		sourceColumn: lost_opportunity_comments
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: 8ce9a642-48b9-4fe6-82d3-633ddbd13d52
+		summarizeBy: count
+		sourceColumn: Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: 41e9fb13-0528-4827-b620-ee42f56f62ea
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c32f8130-04fd-4639-a873-bb9d5b745c17
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Opportunity Won Date' =
+			
+			VAR result = INT( COALESCE( LineLeader_Enrollments[expected_start_date] , LineLeader_Enrollments[wait_list_date] , LineLeader_Enrollments[register_date] ) )
+			RETURN
+			IF( result >= TODAY(), TODAY() , result )
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 38990e6a-1e88-48e9-ba78-4d54879da07c
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition LineLeader_Enrollments = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderEnrollments = Source{[Schema="dbo",Item="LineLeaderEnrollments"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_LineLeaderEnrollments,{{"wait_list_date", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

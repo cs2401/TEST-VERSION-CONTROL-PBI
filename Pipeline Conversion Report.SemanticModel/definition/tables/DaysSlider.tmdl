@@ -1,0 +1,18 @@
+table DaysSlider
+	lineageTag: 707096f6-c302-4720-bfaf-324a93a68f49
+
+	column Value
+		formatString: 0
+		lineageTag: c9cf9beb-e71f-40fa-a2ea-ff20575cc817
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DaysSlider = calculated
+		mode: import
+		source = GENERATESERIES(0, 100, 1)
+
+	annotation PBI_Id = a68058383a9c4cdeb707c66b8300f7e3
+

@@ -1,0 +1,564 @@
+table LineLeader_Families
+	lineageTag: 32befdc9-a576-4525-b02a-53dc882c11e3
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 78cfe677-1a68-43c2-991d-c29fcb9f8c07
+		summarizeBy: none
+		sourceColumn: family_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 11244746-dae9-4bd5-9ab2-d7a3e9ed6eb5
+		summarizeBy: sum
+		sourceColumn: center_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5c8b6945-c270-4dd0-87e2-b94f7af9ade7
+		summarizeBy: none
+		sourceColumn: is_active
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c48bccb0-ece7-47f6-a6cc-9921d345bcb3
+		summarizeBy: none
+		sourceColumn: status_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column exported
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 134e059b-a19d-4028-adb4-2b456b54cb50
+		summarizeBy: none
+		sourceColumn: exported
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column exported_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c6b1650a-afbc-4e82-8ded-a6aba1352271
+		summarizeBy: none
+		sourceColumn: exported_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: bf79ff82-5535-414a-aa64-4779d196f173
+		summarizeBy: none
+		sourceColumn: created_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 53f3ab02-cf01-4429-a6fa-b930971d9d17
+		summarizeBy: none
+		sourceColumn: added_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column inquiry_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f5b82ce-12e0-4c10-af31-55c3cd74b5bf
+		summarizeBy: sum
+		sourceColumn: inquiry_type_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column inquiry_type_value
+		dataType: string
+		lineageTag: 193c3a6b-edca-4840-a4bf-4d005660eb27
+		summarizeBy: none
+		sourceColumn: inquiry_type_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a1e069b4-0e81-4af7-a419-48ee73fc6ec6
+		summarizeBy: sum
+		sourceColumn: source_type_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_type_value
+		dataType: string
+		lineageTag: 185614cd-86a8-4d72-bc0f-c5f98250bb12
+		summarizeBy: none
+		sourceColumn: source_type_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2ae69949-09de-4a95-ab25-00ed2462ce1d
+		summarizeBy: sum
+		sourceColumn: origin_type_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin_type_value
+		dataType: string
+		lineageTag: 06b98253-6c41-4758-9038-59ba895be177
+		summarizeBy: none
+		sourceColumn: origin_type_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column do_not_call
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 767d13a3-df0b-4159-8269-7d03bc3d53c7
+		summarizeBy: none
+		sourceColumn: do_not_call
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column do_not_text
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8fa72b7b-d807-47e0-ab63-4b6c71984cbe
+		summarizeBy: none
+		sourceColumn: do_not_text
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column do_not_email
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d3a5c558-d09d-493f-8f27-4d495e855898
+		summarizeBy: none
+		sourceColumn: do_not_email
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column do_not_auto_email
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f87fb31e-6247-4f1f-9f7b-7df987ad5fb2
+		summarizeBy: none
+		sourceColumn: do_not_auto_email
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_email_general
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fb13390c-7ca8-4de2-b321-b650c1b88412
+		summarizeBy: none
+		sourceColumn: subscription_email_general
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_email_marketing
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2f242a98-1db9-4b51-a257-30bac7076207
+		summarizeBy: none
+		sourceColumn: subscription_email_marketing
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_email_service
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3c146c2f-6233-4834-b984-baed9e69a872
+		summarizeBy: none
+		sourceColumn: subscription_email_service
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_email_urgent
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: df289326-b29e-4a3a-ac2e-b893de9358e6
+		summarizeBy: none
+		sourceColumn: subscription_email_urgent
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_text_general
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fe61faf0-8ad1-448d-b1a2-37a6e33e9554
+		summarizeBy: none
+		sourceColumn: subscription_text_general
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_text_marketing
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: aa072fdf-c960-46b7-a5d0-f61a2b99d785
+		summarizeBy: none
+		sourceColumn: subscription_text_marketing
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_text_service
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6f597236-fcf5-4701-9b6c-604ef551df48
+		summarizeBy: none
+		sourceColumn: subscription_text_service
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_text_urgent
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9f7d68f8-9e47-4820-898d-3ba43ee8ca06
+		summarizeBy: none
+		sourceColumn: subscription_text_urgent
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column comments
+		dataType: string
+		lineageTag: 2c17a9a8-ce02-4409-9981-84ed43501e68
+		summarizeBy: none
+		sourceColumn: comments
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_guardian_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 93bc9683-49be-4165-992e-d49450223e02
+		summarizeBy: sum
+		sourceColumn: primary_guardian_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column good_standing
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b9509689-bb80-4668-a5b1-65c18a394428
+		summarizeBy: none
+		sourceColumn: good_standing
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_by_user_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 60218909-0630-4705-8d7b-2fd178e5510d
+		summarizeBy: sum
+		sourceColumn: added_by_user_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_by_user_first_name
+		dataType: string
+		lineageTag: 878ce945-f466-4546-8092-d679769e2c35
+		summarizeBy: none
+		sourceColumn: added_by_user_first_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_by_user_last_name
+		dataType: string
+		lineageTag: b557717b-c0b1-4eda-a753-503f7e4cebc5
+		summarizeBy: none
+		sourceColumn: added_by_user_last_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_by_user_username
+		dataType: string
+		lineageTag: 06e73e08-cb76-4762-aca3-8b1cf0d94b49
+		summarizeBy: none
+		sourceColumn: added_by_user_username
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column guid
+		dataType: string
+		lineageTag: a740c58d-411d-4064-8c35-5995877376ef
+		summarizeBy: none
+		sourceColumn: guid
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column custom_type_1_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d282bd04-44a7-4cca-89c7-fca21e33fae7
+		summarizeBy: sum
+		sourceColumn: custom_type_1_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column custom_type_1_value
+		dataType: string
+		lineageTag: b3e58433-7144-4f16-b007-72c5441949a6
+		summarizeBy: none
+		sourceColumn: custom_type_1_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column custom_type_2_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0740f1de-1201-4733-b379-f0698815a1b9
+		summarizeBy: sum
+		sourceColumn: custom_type_2_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column custom_type_2_value
+		dataType: string
+		lineageTag: 1d530d3a-a2fe-44f9-8a1f-41d0deb87b40
+		summarizeBy: none
+		sourceColumn: custom_type_2_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: 67121c22-b77d-451e-9ecf-b14a548fa823
+		summarizeBy: count
+		sourceColumn: Id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: 7e4672f5-8a8a-43ea-8609-60c0b240e1ae
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: be326e96-e5c6-4530-8e04-4cfb9b1866bc
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source Category' =
+			
+			VAR s = LOWER ( TRIM ( LineLeader_Families[source_type_value] ) )
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    LEFT ( s, 13 ) = "word of mouth" || s = "friend/family",            "Referral",
+			    CONTAINSSTRING ( s, "signage" ),                                    "Signage",
+			    s = "google search" || s = "google",                                "Google",
+			    s IN { "facebook", "instagram", "social media" },                   "Social Media",
+			    s = "care for kids",                                                "Care For Kids",
+			    s = "event",                                                        "Events",
+			    s = "flyer",                                                        "Flyer",
+			    s = "phone call",                                                   "Phone Call",
+			    s = "import",                                                       "Import",
+			    s in {"other", BLANK(), "unknown", "(Blank)"},                             "Other",
+			    "Other"
+			)
+		lineageTag: bd750857-62be-4c97-be2a-8f546e5c2154
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'No Update Flag' =
+			
+			VAR fid = LineLeader_Families[family_id]
+			VAR Matches =
+			    COUNTROWS (
+			        FILTER (
+			            LineLeader_Updates,
+			            LineLeader_Updates[family_id] = fid
+			                && LineLeader_Updates[type] = "Status"
+			                && VALUE ( TRIM ( LineLeader_Updates[to] ) ) IN {4, 6 }
+			        )
+			    )
+			RETURN
+			IF ( Matches = 0, 1, 0 )
+		formatString: 0
+		lineageTag: 429e5435-62fb-4c29-bc08-748f7b96712f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Child Name' = ```
+			
+			VAR ChildrenForFamily =
+			    FILTER (
+			        LineLeader_FamilyChildren,
+			        LineLeader_FamilyChildren[family_id] = LineLeader_Families[family_id]
+			    )
+			VAR EnrichedChildren =
+			    ADDCOLUMNS (
+			        ChildrenForFamily,
+			        "_Full", LineLeader_FamilyChildren[name],
+			        // First = text before first space (or whole name if single-token)
+			        "_First",
+			            VAR _n = LineLeader_FamilyChildren[name]
+			            VAR _pos = FIND ( " ", _n & " ", 1, 0 )
+			            RETURN IF ( _pos = 0, _n, LEFT ( _n, _pos - 1 ) ),
+			        // Last = text after last space (blank if single-token)
+			        "_Last",
+			            VAR _n = LineLeader_FamilyChildren[name]
+			            VAR _spaces = LEN ( _n ) - LEN ( SUBSTITUTE ( _n, " ", "" ) )
+			            VAR _lastPos =
+			                FIND ( "|", SUBSTITUTE ( _n, " ", "|", _spaces ), 1, 0 )
+			            RETURN IF ( _lastPos = 0, BLANK (), RIGHT ( _n, LEN ( _n ) - _lastPos ) )
+			    )
+			VAR FirstTwo =
+			    TOPN ( 2, EnrichedChildren, [_Full], ASC )
+			VAR ChildCount = COUNTROWS ( FirstTwo )
+			
+			// deterministically pick row 1 and row 2 by [_Full] ascending
+			VAR Row1 = TOPN ( 1, FirstTwo, [_Full], ASC )
+			VAR Row2 = EXCEPT ( FirstTwo, Row1 )
+			
+			VAR C1_First = MAXX ( Row1, [_First] )
+			VAR C1_Last  = MAXX ( Row1, [_Last] )
+			VAR C1_Full  = MAXX ( Row1, [_Full] )
+			
+			VAR C2_First = MAXX ( Row2, [_First] )
+			VAR C2_Last  = MAXX ( Row2, [_Last] )
+			VAR C2_Full  = MAXX ( Row2, [_Full] )
+			
+			// NEW: consider duplicates; EXCEPT can drop a duplicate row, leaving Row2 empty
+			VAR DedupSameFullName =
+			    ChildCount >= 2 && ( ISBLANK ( C2_Full ) || C1_Full = C2_Full )
+			
+			VAR SameLast = NOT ISBLANK ( C1_Last ) && C1_Last = C2_Last
+			
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    ChildCount = 0, BLANK (),
+			    ChildCount = 1, C1_Full,
+			    DedupSameFullName, C1_Full,                                 // <-- fix trailing " & "
+			    SameLast, C1_First & " & " & C2_First & " " & C1_Last,
+			    C1_Full & " & " & C2_Full
+			)
+			
+			```
+		lineageTag: 7cfcbbf2-f431-4391-96d1-c9c3b4fc42fa
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_Families = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderFamilies = Source{[Schema="dbo",Item="LineLeaderFamilies"]}[Data],
+				    #"Removed Duplicates" = Table.Distinct(dbo_LineLeaderFamilies, {"family_id"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

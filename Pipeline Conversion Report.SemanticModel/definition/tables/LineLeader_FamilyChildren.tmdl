@@ -1,0 +1,473 @@
+table LineLeader_FamilyChildren
+	lineageTag: ffa94d7d-99f8-491c-9fb9-04554ffe2c5f
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a88c1e6-6069-4215-b62a-adb0b655f540
+		summarizeBy: sum
+		sourceColumn: family_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 98537fcf-4a95-493f-886b-155ac0a320cf
+		summarizeBy: sum
+		sourceColumn: child_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 541eeb82-4b10-4708-8f06-da144a861ab4
+		summarizeBy: sum
+		sourceColumn: status_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_enrolled_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fb2b7ca7-2c7a-4bdc-869a-a82f64b90840
+		summarizeBy: none
+		sourceColumn: status_enrolled_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_enrolled_reason_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a45884fd-9070-4440-ba17-179183a69694
+		summarizeBy: sum
+		sourceColumn: status_enrolled_reason_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_enrolled_reason_value
+		dataType: string
+		lineageTag: e3afedbe-051e-4494-b2b7-64c061cdae6d
+		summarizeBy: none
+		sourceColumn: status_enrolled_reason_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_expected_start_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: dd16af62-5c17-469e-ba92-0c36175259da
+		summarizeBy: none
+		sourceColumn: status_expected_start_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_is_wait_list_fee_paid
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e87a55a4-bd94-422b-ae5a-f1613685819c
+		summarizeBy: none
+		sourceColumn: status_is_wait_list_fee_paid
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_withdrawn_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d2ac2f11-536e-4992-98d2-d87fb0df3a39
+		summarizeBy: none
+		sourceColumn: status_withdrawn_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_withdrawn_reason_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 96e84f77-2e43-4669-a0d0-c0eacab3da09
+		summarizeBy: sum
+		sourceColumn: status_withdrawn_reason_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_withdrawn_reason_value
+		dataType: string
+		lineageTag: 1149d09c-1a7b-4569-9cbd-71432194de85
+		summarizeBy: none
+		sourceColumn: status_withdrawn_reason_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column exported
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 49dcb752-764b-4821-a678-e72ffa599dca
+		summarizeBy: none
+		sourceColumn: exported
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column exported_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 080b6782-5e5d-41f1-b2fa-c5be4869e170
+		summarizeBy: none
+		sourceColumn: exported_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: e8e6cff6-4337-4aa7-927f-484845ac39d2
+		summarizeBy: none
+		sourceColumn: name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_name
+		dataType: string
+		lineageTag: 8b6b09dd-668a-4c4a-a997-1dab6aea6f04
+		summarizeBy: none
+		sourceColumn: first_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_name
+		dataType: string
+		lineageTag: 20800e50-168d-4b48-b5f8-b3085cb87422
+		summarizeBy: none
+		sourceColumn: last_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column preferred_name
+		dataType: string
+		lineageTag: 6fe5f544-a054-4cdc-b23d-80dce9cb940d
+		summarizeBy: none
+		sourceColumn: preferred_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: 86222eb5-8167-4661-b426-fc589c9c2966
+		summarizeBy: none
+		sourceColumn: gender
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_of_birth
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 64c61653-7190-436b-8798-3d74dad4be20
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_estimated_date_of_birth
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 21c92978-6522-4724-a5bc-78804ad4a07f
+		summarizeBy: none
+		sourceColumn: is_estimated_date_of_birth
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8138e8d2-d4c5-4441-9e38-ed8a88f73e08
+		summarizeBy: none
+		sourceColumn: added_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column system_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8f8a9bff-9580-40b7-8c0f-9ecb8d66264f
+		summarizeBy: none
+		sourceColumn: system_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column comments
+		dataType: string
+		lineageTag: 69bced1f-b85a-4068-a2d0-9776082a53f3
+		summarizeBy: none
+		sourceColumn: comments
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_language
+		dataType: string
+		lineageTag: 40df7ae3-e603-48e5-bf12-7dc192414a8b
+		summarizeBy: none
+		sourceColumn: primary_language
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column secondary_language
+		dataType: string
+		lineageTag: a903ebdd-05fd-4bf4-b918-6a6eba5bbeee
+		summarizeBy: none
+		sourceColumn: secondary_language
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column immunizations_compliant
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 99b97762-f2f8-444d-9779-85c0453a1cdc
+		summarizeBy: none
+		sourceColumn: immunizations_compliant
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column allergies
+		dataType: string
+		lineageTag: fa4ef61a-e5fe-43e4-b1a3-9ec0b6bf8d90
+		summarizeBy: none
+		sourceColumn: allergies
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column medical_conditions
+		dataType: string
+		lineageTag: 3bfe1900-9c8c-4483-b974-ca38a135d241
+		summarizeBy: none
+		sourceColumn: medical_conditions
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column dietary_requirements
+		dataType: string
+		lineageTag: 7bf84bcf-c0a2-45f5-9340-8c82b326d28b
+		summarizeBy: none
+		sourceColumn: dietary_requirements
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column classroom
+		dataType: string
+		lineageTag: eac86eac-b26d-4d24-8eb3-4f63bccc7888
+		summarizeBy: none
+		sourceColumn: classroom
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column good_standing
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 99b723ce-7fbd-4e5b-9093-c65a8f9888d6
+		summarizeBy: none
+		sourceColumn: good_standing
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_child_of_staff
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6b5d591f-a0dd-4015-b01c-b48520545835
+		summarizeBy: none
+		sourceColumn: is_child_of_staff
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_eligible_for_reenrollment
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a2c2fa60-ce7c-47bb-8ac2-3e7e36314c4a
+		summarizeBy: none
+		sourceColumn: is_eligible_for_reenrollment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column prior_likes
+		dataType: string
+		lineageTag: 44eb436d-e0f0-41c2-86d4-33d6d4167231
+		summarizeBy: none
+		sourceColumn: prior_likes
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column prior_dislikes
+		dataType: string
+		lineageTag: 024d7560-e50a-4e1f-9b7e-cdc456ef28cf
+		summarizeBy: none
+		sourceColumn: prior_dislikes
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column prior_situation_comment
+		dataType: string
+		lineageTag: bb66ca74-fbb2-4b65-87d0-357901b1ddc8
+		summarizeBy: none
+		sourceColumn: prior_situation_comment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_sibling_in_care
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: dc6ca521-78c2-4a14-b154-298a47b151df
+		summarizeBy: none
+		sourceColumn: is_sibling_in_care
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: 13f31867-7715-46f7-87f3-b354a2423611
+		summarizeBy: count
+		sourceColumn: Id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: 248194c8-63e1-4a36-995a-2eefd78062a9
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 549afc5d-00a8-4971-a423-e5a0d22aa233
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column CentreID = LOOKUPVALUE(LineLeader_Families[center_id], LineLeader_Families[family_id], LineLeader_FamilyChildren[family_id])
+		formatString: 0
+		lineageTag: 1ab533a0-397a-4a1f-866e-ffc0e1da7f63
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age Group' = ```
+			
+			VAR ageInMonths = DATEDIFF('LineLeader_FamilyChildren'[date_of_birth], TODAY(), MONTH )
+			RETURN
+			SWITCH ( 
+			    TRUE(),
+			    ageInMonths < 24, "0-24",
+			    ageInMonths >= 24 && ageInMonths < 36, "24-36",
+			    ageInMonths >= 36, "36+",
+			    BLANK()
+			)
+			```
+		lineageTag: e727a683-2d17-4f0f-9dbf-4b5cce6d1cf2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_FamilyChildren = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Databases("yourdatahubececservicesptyltd.database.windows.net"),
+				    database = Source{[Name="yourdatahub_ececservicesptyltd"]}[Data],
+				    dbo_LineLeaderFamilyChildren = database{[Schema="dbo",Item="LineLeaderFamilyChildren"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(dbo_LineLeaderFamilyChildren, each not Text.Contains([last_name], "test")),
+				    #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each not Text.Contains([comments], "test")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows1",{{"added_date", type date}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type",{{"name", Text.Trim, type text}})
+				in
+				    #"Trimmed Text"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

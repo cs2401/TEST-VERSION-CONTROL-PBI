@@ -1,0 +1,47 @@
+table Parameter
+	lineageTag: b998e958-5e0c-4b17-9f0f-37859c83c260
+
+	column Parameter
+		lineageTag: c30c2bec-17e0-4fc4-aa1b-96e9971a746d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Fields'
+		isHidden
+		lineageTag: 01dc320c-dc5c-4a75-b6a9-a9a77edf41a1
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Order'
+		isHidden
+		formatString: 0
+		lineageTag: ce4f8dde-5b80-4b2c-867e-71290e0cc78a
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Parameter = calculated
+		mode: import
+		source =
+				{
+				    ("Value", NAMEOF('DaysSlider'[Value]), 0)
+				}
+
+	annotation PBI_Id = c5ce05292b094df4903585c763e3353a
+

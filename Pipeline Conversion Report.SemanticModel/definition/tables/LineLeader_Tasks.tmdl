@@ -1,0 +1,479 @@
+table LineLeader_Tasks
+	lineageTag: 482473ea-1ca1-46bc-b413-14d1e04eb5d3
+
+	column task_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6574e858-f3e0-4f62-bcbd-6f48994cac99
+		summarizeBy: sum
+		sourceColumn: task_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f227a69d-5f01-4506-b4a5-b4940b13ec40
+		summarizeBy: none
+		sourceColumn: family_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column center_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 328eed4c-4348-4f2b-a30e-bbf216bec807
+		summarizeBy: none
+		sourceColumn: center_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 5417bbb6-29b1-4b48-ac5e-4aa26c2be3de
+		summarizeBy: sum
+		sourceColumn: type_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_value
+		dataType: string
+		lineageTag: e8b5d329-1034-485c-9551-7fb223ea6c0a
+		summarizeBy: none
+		sourceColumn: type_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 40961953-501a-4df7-8bb3-ea35a539ac93
+		summarizeBy: none
+		sourceColumn: type_is_active
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_is_hidden
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: df69121a-34f6-47d9-aafc-fa1311710819
+		summarizeBy: none
+		sourceColumn: type_is_hidden
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column group_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 737f4339-4ca7-4932-b3f0-aeb07940431a
+		summarizeBy: sum
+		sourceColumn: group_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column group_name
+		dataType: string
+		lineageTag: cce66762-20a1-4737-bbb5-26e03a38694d
+		summarizeBy: none
+		sourceColumn: group_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 460b81c1-3213-4d33-be0d-5140936226aa
+		summarizeBy: none
+		sourceColumn: description
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_by_staff_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 71448081-be67-4d8b-958a-b7faf2ccd8f4
+		summarizeBy: sum
+		sourceColumn: assigned_by_staff_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_by_staff_first_name
+		dataType: string
+		lineageTag: c5f8e53e-3e37-4dfa-9cca-0d2b22e2d26b
+		summarizeBy: none
+		sourceColumn: assigned_by_staff_first_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_by_staff_last_name
+		dataType: string
+		lineageTag: 54f36d9b-a999-4a1c-a09c-086f38fc90c0
+		summarizeBy: none
+		sourceColumn: assigned_by_staff_last_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_by_staff_username
+		dataType: string
+		lineageTag: 550d7ea6-6a6e-47a8-b55c-9a4a6194ea3b
+		summarizeBy: none
+		sourceColumn: assigned_by_staff_username
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_to_staff_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6280fc50-c22e-4501-b155-11b2392e6e7f
+		summarizeBy: sum
+		sourceColumn: assigned_to_staff_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_to_staff_first_name
+		dataType: string
+		lineageTag: fd04d3e0-4738-4fbf-9f8a-3c33c76cd57c
+		summarizeBy: none
+		sourceColumn: assigned_to_staff_first_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_to_staff_last_name
+		dataType: string
+		lineageTag: d88e4254-5927-4eaa-9b47-99fd621eb6e4
+		summarizeBy: none
+		sourceColumn: assigned_to_staff_last_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_to_staff_username
+		dataType: string
+		lineageTag: a0509589-280f-498c-b0c2-cc9485384c43
+		summarizeBy: none
+		sourceColumn: assigned_to_staff_username
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_due_date_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9716e061-0478-4389-b3c7-d496b51c9c17
+		summarizeBy: none
+		sourceColumn: original_due_date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column due_date_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 795da196-ed31-4182-8df8-4b1391093327
+		summarizeBy: none
+		sourceColumn: due_date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column show_on_calendar
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: af2e6352-747f-48f4-b43e-2a5be4b5d0c1
+		summarizeBy: none
+		sourceColumn: show_on_calendar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_completed
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3ff7c604-ec2e-4e45-a46e-bcc80257a0d9
+		summarizeBy: none
+		sourceColumn: is_completed
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_date_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 32a42a69-8198-4eb6-8b09-77ceeddf6137
+		summarizeBy: none
+		sourceColumn: completed_date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_by_staff_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bc2b0abc-98f5-4115-83b9-0335e1350bc3
+		summarizeBy: sum
+		sourceColumn: completed_by_staff_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_by_staff_first_name
+		dataType: string
+		lineageTag: d5b82b44-8a04-4ccb-9af7-9d5a01608bb1
+		summarizeBy: none
+		sourceColumn: completed_by_staff_first_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_by_staff_last_name
+		dataType: string
+		lineageTag: dfc5a908-24a2-42f3-ad4f-7cae57a8927b
+		summarizeBy: none
+		sourceColumn: completed_by_staff_last_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_by_staff_username
+		dataType: string
+		lineageTag: 1630b86d-17df-45bb-9815-23bfa3e04850
+		summarizeBy: none
+		sourceColumn: completed_by_staff_username
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column result_description
+		dataType: string
+		lineageTag: bbc4966a-822d-40ce-ab22-7c91bba9a486
+		summarizeBy: none
+		sourceColumn: result_description
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_cancelled
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b74fe396-9459-476e-ae35-df1c98df37a1
+		summarizeBy: none
+		sourceColumn: is_cancelled
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column staff_email_reminder
+		dataType: string
+		lineageTag: 8edf29d4-5d0b-4875-aafb-d2ff58608caf
+		summarizeBy: none
+		sourceColumn: staff_email_reminder
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column staff_text_reminder
+		dataType: string
+		lineageTag: 61060751-cbf2-4514-959f-5632c614056c
+		summarizeBy: none
+		sourceColumn: staff_text_reminder
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_guardian_email_reminder
+		dataType: string
+		lineageTag: 9419bd0c-c48e-46bd-aef8-30f817a77118
+		summarizeBy: none
+		sourceColumn: primary_guardian_email_reminder
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_guardian_text_reminder
+		dataType: string
+		lineageTag: 5d4bcd7f-40e3-4def-9b8f-fd50c4382c76
+		summarizeBy: none
+		sourceColumn: primary_guardian_text_reminder
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column added_date_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4eca7c1c-4190-49fe-836c-ec835935cace
+		summarizeBy: none
+		sourceColumn: added_date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c527c6c0-15a0-4048-a1d4-e86ddf55e8c3
+		summarizeBy: sum
+		sourceColumn: source_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_name
+		dataType: string
+		lineageTag: 65c70af1-fd0c-4bf6-aa5b-592b456a505d
+		summarizeBy: none
+		sourceColumn: source_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration
+		dataType: int64
+		formatString: 0
+		lineageTag: 06b50af8-935d-4c5f-b665-a9e3e50a2717
+		summarizeBy: sum
+		sourceColumn: duration
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: 918b1ae5-8a2b-4c11-92be-2fe815ea8e5e
+		summarizeBy: count
+		sourceColumn: Id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: 7c2f40dd-ed3a-472b-bec5-eab6e71ec031
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e51ae6a5-65b1-4950-9afa-0e61f32b173d
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Task Summary'
+		dataType: string
+		lineageTag: 1d31d0b4-fb06-40ba-9f96-f5f7c5bb1826
+		summarizeBy: none
+		sourceColumn: Task Summary
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Added Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2b613545-b78a-4be2-a730-1ea35a557143
+		summarizeBy: none
+		sourceColumn: Added Date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Source
+		dataType: string
+		lineageTag: 03a023ea-3723-43d3-a801-9a53c87f6476
+		summarizeBy: none
+		sourceColumn: Source
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_Tasks = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderTasks = Source{[Schema="dbo",Item="LineLeaderTasks"]}[Data],
+				    #"Added Conditional Column" = Table.AddColumn(#"dbo_LineLeaderTasks", "Task Summary", each if Text.Contains([description], "Email") then "Send Email" else if Text.Contains([description], "Call") then "Call" else if Text.Contains([description], "Check for response") then "Check for response" else if Text.Contains([description], "follow up") then "Follow Up" else if Text.Contains([description], "Tour") then "Tour" else if Text.Contains([description], "Check for a response") then "Check for response" else null),
+				    #"Filtered Rows" = Table.SelectRows(#"Added Conditional Column", each true),
+				    #"Inserted Date" = Table.AddColumn(#"Filtered Rows", "Date", each DateTime.Date([added_date_time]), type date),
+				    #"Renamed Columns" = Table.RenameColumns(#"Inserted Date",{{"Date", "Added Date"}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Renamed Columns", {"family_id"}, LineLeader_Families, {"family_id"}, "LineLeader_Families", JoinKind.LeftOuter),
+				    #"Expanded LineLeaderFamilies" = Table.ExpandTableColumn(#"Merged Queries", "LineLeader_Families", {"source_type_value"}, {"LineLeader_Families.source_type_value"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Expanded LineLeaderFamilies",{{"LineLeader_Families.source_type_value", "Source"}})
+				in
+				    #"Renamed Columns1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

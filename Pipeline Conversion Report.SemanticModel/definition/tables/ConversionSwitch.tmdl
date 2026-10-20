@@ -1,0 +1,30 @@
+table ConversionSwitch
+	lineageTag: d56fe54f-3a97-4e59-a0ac-a7600b9ff220
+
+	column ConversionType
+		dataType: string
+		lineageTag: c73516bc-f5f3-4974-80e5-130e93b33adb
+		summarizeBy: none
+		sourceColumn: ConversionType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ConversionSwitch = m
+		mode: import
+		source =
+				let
+				    ConversionSwitch = #table(
+				        {"ConversionType"},
+				        {
+				            {"Enrolled"},
+				            {"Waitlisted"},
+				            {"Combined"}
+				        }
+				    )
+				in
+				    ConversionSwitch
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

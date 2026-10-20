@@ -1,0 +1,665 @@
+table _Measures
+	lineageTag: 1630390f-4ac2-4a49-8c12-587bc49dd486
+
+	measure 'Placeholder (Blank)' =
+			
+			" "
+		lineageTag: 8bbba0b1-dd30-40a3-a67f-e4d839ae48fb
+
+		changedProperty = IsHidden
+
+	measure 'Count Tours Scheduled (Enquired)' = ```
+			
+			VAR MinDate = MIN(_date[Date])
+			VAR MaxDate = MAX(_date[Date])
+			
+			RETURN 
+			CALCULATE(
+			    DISTINCTCOUNT(LineLeader_Updates[family_id]),
+			    LineLeader_Updates[to] = "11",
+			    LineLeader_Updates[type] = "Status",
+			    NOT(ISBLANK(LineLeader_Updates[EnquiryDate])),
+			    LineLeader_Updates[EnquiryDate] >= MinDate,
+			    LineLeader_Updates[EnquiryDate] <= MaxDate
+			)
+			
+			
+			```
+		formatString: 0
+		lineageTag: f7b5f6b9-7a31-4e2c-a345-cf7e6d8b9bb7
+
+		changedProperty = IsHidden
+
+	measure 'Tour Success Rate (%) Target' =
+			
+			VAR _maxDate =
+			    MAX ( _Date[Date] )
+			RETURN
+			    CALCULATE ( 0.5, DATESINPERIOD ( _Date[Date], _maxDate, -42, DAY ) )
+		formatString: 0%;-0%;0%
+		lineageTag: 94b0c236-4e86-47b8-a687-406dddf450d6
+
+		changedProperty = IsHidden
+
+	measure Selected_Date = selectedvalue(_Date[Week Ending Slicer])
+		lineageTag: 1e23f627-a396-435f-adba-f2bd8a5be3b5
+
+	measure 'Count Enquiries' = distinctcount(LineLeader_Enquiries[family_id])
+		formatString: 0
+		lineageTag: 8bcbc8c7-1466-46f8-9578-3ff08ead20e1
+
+	measure 'EnqToTour Conversion Rate' =
+			
+			DIVIDE(
+			    [Count Tours Scheduled (Enquired)],
+			    [Count Enquiries],
+			    0
+			)+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 5cef5466-a052-4ef4-b2c2-52455f902790
+
+	measure CompletedTours =
+			
+			VAR MinDate = MIN(_date[Date])
+			VAR MaxDate = MAX(_date[Date])
+			
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(LineLeader_Updates[family_id]),
+			    LineLeader_Updates[to] IN {"11", "3"},
+			    LineLeader_Updates[type] = "Status",
+			    NOT ISBLANK(LineLeader_Updates[Date Tour Completed (LLTasks)]),/*
+			    USERELATIONSHIP(LineLeader_Updates[LatestTourAddedDate], _Date[Date])*/
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] >= MinDate,
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] <= MaxDate
+			)
+		formatString: 0
+		lineageTag: add4100b-d73a-42d9-a854-2976a4f7d097
+
+	measure 'Conv''d Tour (combined)' = ```
+			
+			VAR MinDate = MIN(_date[Date])
+			VAR MaxDate = MAX(_date[Date])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(LineLeader_Updates[family_id]),
+			    LineLeader_Updates[type] = "Status",
+			    LineLeader_Updates[to] IN {"4", "6"},
+			    NOT(ISBLANK(LineLeader_Updates[Date Tour Completed (LLTasks)])),
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] >= MinDate,
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] <= MaxDate,
+			    ALL(LineLeader_Updates) 
+			)
+			```
+		formatString: 0
+		lineageTag: 53d16c57-b399-4b19-ac38-3dcec566d88e
+
+	measure TourConversionRate = Divide([Conv'd Tour], [CompletedTours],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e2180a6f-909e-4653-ae56-09af3aae4b59
+
+	measure 'Total Conversion' = [EnqToTour Conversion Rate]* [TourConversionRate]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 385c73aa-8d48-47c1-8348-b29c513b488e
+
+	measure 'Waitlisted Tour' =
+			
+			VAR MinDate = MIN(_date[Date])
+			VAR MaxDate = MAX(_date[Date])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(LineLeader_Updates[family_id]),
+			    LineLeader_Updates[type] = "Status",
+			    LineLeader_Updates[to] IN {"4"},
+			    NOT(ISBLANK(LineLeader_Updates[LatestTourAddedDate])),
+			    LineLeader_Updates[LatestTourAddedDate] >= MinDate,
+			    LineLeader_Updates[LatestTourAddedDate] <= MaxDate
+			)
+		formatString: 0
+		lineageTag: 1e06591a-335f-48f4-847c-8d5319380f7e
+
+	measure SelectedPercentile = MAX(ConversionPercentileSlider[Percent])
+		lineageTag: b679293c-4a89-4a98-8062-43bed003b402
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Conv''d Tour (Waitlist)' =
+			
+			VAR MinDate = MIN(_date[Date])
+			VAR MaxDate = MAX(_date[Date])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(LineLeader_Updates[family_id]),
+			    LineLeader_Updates[type] = "Status",
+			    LineLeader_Updates[to] IN {"4"},
+			    NOT(ISBLANK(LineLeader_Updates[Date Tour Completed (LLTasks)])),
+			    ISBLANK(LineLeader_Updates[DateEnrolled]),
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] >= MinDate,
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] <= MaxDate
+			)
+		formatString: 0
+		lineageTag: 0ffb05db-4678-4f5f-b127-1774b0cac350
+
+	measure 'Conv''d Tour (Enrolled)' =
+			
+			VAR MinDate = MIN(_date[Date])
+			VAR MaxDate = MAX(_date[Date])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(LineLeader_Updates[family_id]),
+			    LineLeader_Updates[type] = "Status",
+			    LineLeader_Updates[to] IN {"6"},
+			    NOT(ISBLANK(LineLeader_Updates[Date Tour Completed (LLTasks)])),
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] >= MinDate,
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] <= MaxDate
+			)
+		formatString: 0
+		lineageTag: 09dd61ee-d471-49ae-ae40-d10d7efbc175
+
+	measure 'Conv''d Tour' =
+			
+			VAR SelectedType =
+			    SELECTEDVALUE(ConversionSwitch[ConversionType], "Combined")
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    SelectedType = "Enrolled",
+			        [Conv'd Tour (Enrolled)],
+			    SelectedType = "Waitlisted",
+			        [Conv'd Tour (Waitlist)],
+			    -- Default to Combined
+			    [Conv'd Tour (combined)]
+			) + 0
+		formatString: 0
+		lineageTag: ca4b7c81-443e-441f-86ff-9104feb6e811
+
+	measure ConversionPercentileSummary =
+			
+			VAR MinDate = MIN(_Date[Date])
+			VAR MaxDate = MAX(_Date[Date])
+			VAR SelectedStart = FORMAT(MinDate, "d MMM yyyy")
+			VAR SelectedEnd = FORMAT(MaxDate, "d MMM yyyy")
+			
+			VAR SelectedPercent = [SelectedPercentile] * 100
+			VAR RoundedPercent = ROUND(SelectedPercent, 0)
+			
+			VAR DaysToConvert = [SelectedThreshold_DaysOrPercentile]
+			VAR DayLabel = IF(DaysToConvert = 1, " day", " days")
+			
+			RETURN
+			IF(
+			    ISBLANK(DaysToConvert),
+			    "No conversion data available for the selected period.",
+			    "From " & SelectedStart & " to " & SelectedEnd &
+			    ", it took " & DaysToConvert & DayLabel &
+			    " to complete " & RoundedPercent & "% of conversions"
+			)
+		lineageTag: f6283f92-5cae-48c6-b3e5-040e3fdcb506
+
+	measure SelectedThreshold_DaysOrPercentile = ```
+			
+			SWITCH(
+			    SELECTEDVALUE(ConversionViewMode[Mode]),
+			    "Percent", [DaysToReachPercentile],        -- From your earlier measure
+			    "Days", MAX(DaysSlider[Value]),            -- Value selected by user directly
+			    BLANK()
+			)
+			
+			```
+		lineageTag: ba756d16-ae2d-4c18-b5ed-bd30c6ff8e94
+
+	measure DaysToReachPercentile = ```
+			
+			VAR Total =
+			    CALCULATE(
+			        COUNTROWS(TourToConversionPairs)
+			    )
+			
+			RETURN
+			MINX(
+			    FILTER(
+			        ADDCOLUMNS(
+			            VALUES(TourToConversionPairs[DaysElapsed]),
+			            "CumulativePercent", 
+			            VAR CurrentDay = [DaysElapsed]
+			            VAR RunningTotal = 
+			                CALCULATE(
+			                    COUNTROWS(TourToConversionPairs),
+			                    FILTER(
+			                        TourToConversionPairs,
+			                        TourToConversionPairs[DaysElapsed] <= CurrentDay
+			                    )
+			                )
+			            RETURN DIVIDE(RunningTotal, Total)
+			        ),
+			        [CumulativePercent] >= [SelectedPercentile]
+			    ),
+			    [DaysElapsed]
+			)
+			
+			```
+		formatString: 0
+		lineageTag: b6a19aa3-bfc3-43ff-98eb-f3ce2fad583b
+
+	measure 'Tour Conversion Vs Last Year' =
+			
+			VAR IsMonthSelected = COUNTROWS(VALUES(_Date[Year-Month])) = 1
+			VAR IsQuarterSelected = COUNTROWS(VALUES(_Date[Fiscal Month])) = 1
+			VAR IsYearSelected = COUNTROWS(VALUES(_Date[Fiscal Year Name])) = 1
+			
+			VAR ThisPeriodTours = [EnqToTour Conversion Rate]
+			
+			VAR LastPeriodTours =
+			    SWITCH(
+			        TRUE(),
+			        IsMonthSelected,
+			            CALCULATE(
+			                [EnqToTour Conversion Rate],
+			                DATEADD(_Date[Date], -1, YEAR),
+			                VALUES(_Date[Month])
+			            ),
+			        IsQuarterSelected,
+			            CALCULATE(
+			                [EnqToTour Conversion Rate],
+			                DATEADD(_Date[Date], -1, YEAR),
+			                VALUES(_Date[Fiscal Quarter])
+			            ),
+			        IsYearSelected,
+			            CALCULATE(
+			                [EnqToTour Conversion Rate],
+			                DATEADD(_Date[Date], -1, YEAR)
+			            ),
+			        BLANK()
+			    )
+			
+			RETURN
+			DIVIDE(ThisPeriodTours - LastPeriodTours, LastPeriodTours, 0)
+		lineageTag: eb66d9d9-a7e2-42d2-8200-6496d866a6b9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'EnqToTour Conversion Average' =
+			
+			/*AVERAGEX (
+			    FILTER (
+			        ALL ( _Services[Short Name], _Services[Conversion Flag] ),
+			        _Services[Conversion Flag] = 1
+			    ),
+			    CALCULATE ( [_EnqToTourConversion Rate] )
+			)*/
+			
+			VAR Flagged =
+			    FILTER ( ALL ( _Services[Short Name], _Services[Conversion Flag] ),
+			             _Services[Conversion Flag] = 1 )
+			RETURN
+			DIVIDE (
+			    CALCULATE ( [Count Tours Scheduled (Enquired)], Flagged ),
+			    CALCULATE ( [Count Enquiries], Flagged ),
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 390f17b1-a7ea-43a1-9835-2fbb1fc79b81
+
+	measure 'Source Category Colour' =
+			
+			VAR cat =
+			    SELECTEDVALUE ( LineLeader_Families[Source Category], "Other" )
+			RETURN
+			SWITCH (
+			    cat,
+			    "Referral",        "#f1614e",
+			    "Signage",         "#f6a76d",
+			    "Google",          "#f0cc69",
+			    "Social Media",    "#90ce9a",
+			    "Care For Kids",   "#7ec5c0",
+			    "Events",          "#7da2ba",
+			    "Flyer",           "#b6a6cc",
+			    "Phone Call",      "#f8c0c3",
+			    "Import",          "#7f7f7f",
+			    "Other",           "#c7c7c7",
+			    "#c7c7c7"
+			)
+		lineageTag: 91eaeacc-9a9f-4ac5-b376-b1071481d5bc
+
+	measure 'Tour Conversion Average' =
+			
+			VAR Flagged =
+			    FILTER (
+			        ALL ( _Services[Short Name], _Services[Conversion Flag] ),
+			        _Services[Conversion Flag] = 1
+			    )
+			RETURN
+			DIVIDE (
+			    CALCULATE ( [Conv'd Tour],   Flagged ),
+			    CALCULATE ( [CompletedTours], Flagged ),
+			    0
+			)
+		lineageTag: 39e26402-f649-4f38-9822-d5972f58cc2f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Conversion Average' =
+			
+			VAR Flagged =
+			    FILTER (
+			        ALL ( _Services[Short Name], _Services[Conversion Flag] ),
+			        _Services[Conversion Flag] = 1
+			    )
+			RETURN
+			CALCULATE ( [Total Conversion], Flagged )
+		lineageTag: be0823d6-ecab-4879-86b5-8c63c8b602bc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'EnqToTour Conversions from Target (Text)' =
+			
+			
+			VAR _allSel =
+			    COUNTROWS ( ALLSELECTED ( _Services[Short Name] ) )
+			        = COUNTROWS ( ALL ( _Services[Short Name] ) )
+			VAR TargetRate       = COALESCE ( [EnqToTour Conversion Average], 0 )
+			VAR Enquiries        = COALESCE ( [Count Enquiries], 0 )
+			VAR Conversions      = COALESCE ( [Count Tours Scheduled (Enquired)], 0 )
+			VAR RequiredAtTarget = TargetRate * Enquiries
+			VAR Gap              = RequiredAtTarget - Conversions
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    _allSel,                                     "All Centres Selected",
+			    Enquiries = 0 || TargetRate <= 0,            "Conversions to reach target: 0",
+			    Gap <= 0,                                     "On Target",
+			    "Conversions to reach target: " & FORMAT ( CEILING ( MAX ( 0, Gap ), 1 ), "0" )
+			)
+		lineageTag: dfc42826-b154-4eb7-82bb-75b344ea9045
+
+	measure 'EnqToTour Conv Average Card' =
+			"Average: " &
+			IF ( ISBLANK ( [EnqToTour Conversion Average] ), "N/A",
+			     FORMAT ( [EnqToTour Conversion Average], "0.00%" ) )
+		lineageTag: ae31c10f-feb5-4dd2-bcb5-d6225d6b49f9
+
+	measure 'Gauge Color EnqConv' =
+			
+			VAR _value  = [EnqToTour Conversion Rate]
+			VAR _target = [EnqToTour Conversion Average]
+			VAR _allSel = NOT ISFILTERED ( _Services[Short Name] )   -- slicer is at All
+			RETURN
+			IF (
+			    OR ( ISBLANK ( _value ), ISBLANK ( _target ) ), "#c7c7c7",
+			    IF ( _allSel, "#f6a76d",
+			         IF ( _value < _target, "#f1614e", "#90ce9a" )
+			    )
+			)
+		lineageTag: 08af8d2b-c7c9-4168-a0f2-b5a666ee579f
+
+	measure 'Tour Conv Average Card' =
+			"Average: " &
+			IF ( ISBLANK ( [Tour Conversion Average] ), "N/A",
+			     FORMAT ( [Tour Conversion Average], "0.00%" ) )
+		lineageTag: ddc71265-7186-47e3-8138-25bd43e1e4ed
+
+	measure 'Total Conv Average Card' =
+			"Average: " &
+			IF ( ISBLANK ( [Total Conversion Average] ), "N/A",
+			     FORMAT ( [Total Conversion Average], "0.00%" ) )
+		lineageTag: 47573ed3-126e-4521-b07e-025268a21ab9
+
+	measure 'Tour Conversions from Target (Text)' = ```
+			
+			VAR _allSel =
+			    COUNTROWS ( ALLSELECTED ( _Services[Short Name] ) )
+			        = COUNTROWS ( ALL ( _Services[Short Name] ) )
+			VAR TargetRate       = COALESCE ( [Tour Conversion Average], 0 )
+			VAR Tours            = COALESCE ( [CompletedTours], 0 )
+			VAR Conversions      = COALESCE ( [Conv'd Tour], 0 )
+			VAR RequiredAtTarget = TargetRate * Tours
+			VAR Gap              = RequiredAtTarget - Conversions
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    _allSel,                                     "All Centres Selected",
+			    Tours = 0 || TargetRate <= 0,                "Conversions to reach target: 0",
+			    Gap <= 0,                                     "On Target",
+			    "Conversions to reach target: " & FORMAT ( CEILING ( MAX ( 0, Gap ), 1 ), "0" )
+			)
+			
+			```
+		lineageTag: fb696196-bf4f-4627-b277-79116efa3029
+
+	measure 'Gauge Color TourConv' = ```
+			
+			VAR _value  = [TourConversionRate]
+			VAR _target = [Tour Conversion Average]
+			VAR _allSel = NOT ISFILTERED ( _Services[Short Name] )
+			RETURN
+			IF (
+			    OR ( ISBLANK ( _value ), ISBLANK ( _target ) ), "#c7c7c7",
+			    IF ( _allSel, "#f6a76d",
+			         IF ( _value < _target, "#f1614e", "#90ce9a" )
+			    )
+			)
+			
+			
+			```
+		lineageTag: 966577c2-6152-45f8-a4b4-c6439cb68d52
+
+	measure 'Gauge Color TotalConv' =
+			
+			
+			VAR _value  = [Total Conversion]
+			VAR _target = [Total Conversion Average]
+			VAR _allSel = NOT ISFILTERED ( _Services[Short Name] )
+			RETURN
+			IF (
+			    OR ( ISBLANK ( _value ), ISBLANK ( _target ) ), "#c7c7c7",
+			    IF ( _allSel, "#f6a76d",
+			         IF ( _value < _target, "#f1614e", "#90ce9a" )
+			    )
+			)
+		lineageTag: c24d61b9-4a26-46e6-b31f-9dcc351901ff
+
+	measure 'Median Days to Enroll from Tour' = calculate(MEDIAN(LineLeader_Updates[TourToEnrolledDays]))
+		lineageTag: cd589b52-d98a-45f1-9959-5a5cda3bb28d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Days to Enroll from Tour' = calculate(AVERAGE(LineLeader_Updates[TourToEnrolledDays]))
+		formatString: 0.0
+		lineageTag: 23fc89dd-756a-4392-89fd-c95913fc6820
+
+	measure 'Conversion Speed Average (all)' =
+			
+			VAR Flagged =
+			    FILTER (
+			        ALL ( _Services[Short Name], _Services[Conversion Flag] ),
+			        _Services[Conversion Flag] = 1
+			    )
+			RETURN
+			CALCULATE ( [Average Days to Enroll from Tour], Flagged )
+		lineageTag: 50f80b3b-ff25-4728-97a3-c295e2dc356a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Days TourToEnroll Average Card' =
+			"Average: " &
+			IF ( ISBLANK ( [Conversion Speed Average (all)] ), "N/A",
+			     FORMAT ( [Conversion Speed Average (all)], "0.0" ) )
+		lineageTag: 48a0cd67-9231-4c33-9806-e0bfc10a213c
+
+	measure 'Gauge Color EnrollDays' =
+			
+			VAR _value  = [Average Days to Enroll from Tour]
+			VAR _target = [Conversion Speed Average (all)]
+			VAR _allSel = NOT ISFILTERED ( _Services[Short Name] )
+			RETURN
+			IF (
+			    OR ( ISBLANK ( _value ), ISBLANK ( _target ) ), "#c7c7c7",
+			    IF ( _allSel, "#f6a76d",
+			         IF ( _value > _target, "#f1614e", "#90ce9a" )
+			    )
+			)
+		lineageTag: f2b990dd-e15b-416d-9b7a-ca0912500114
+
+	measure 'Days to Enrol from Target (Text)' =
+			
+			VAR _allSel =
+			    COUNTROWS ( ALLSELECTED ( _Services[Short Name] ) )
+			        = COUNTROWS ( ALL ( _Services[Short Name] ) )
+			VAR TargetDays  = [Conversion Speed Average (all)]
+			VAR CurrentDays = [Average Days to Enroll from Tour]
+			VAR GapDays     = CurrentDays - TargetDays
+			VAR NeededDays  = CEILING ( MAX ( 0, GapDays ), 1 )
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    _allSel,                                            "All Centres Selected",
+			    OR ( ISBLANK ( TargetDays ), ISBLANK ( CurrentDays ) ),
+			                                                        "Adjustment Required: N/A",
+			    GapDays <= 0,                                       "On Target",
+			    "Adjustment Required: " &
+			        FORMAT ( NeededDays, "0" ) &
+			        " day" & IF ( NeededDays = 1, "", "s" )
+			)
+		lineageTag: 8ae585fd-c34c-4d4d-b0f4-ffc8d13a42e0
+
+	measure 'Pipeline Focus (Text)' = ```
+			
+			VAR EnqVal  = [EnqToTour Conversion Rate]
+			VAR EnqTgt  = [EnqToTour Conversion Average]
+			VAR TourVal = [TourConversionRate]
+			VAR TourTgt = [Tour Conversion Average]
+			
+			-- Detect "All" on the _Services[Short Name] slicer
+			VAR AllSel =
+			    COUNTROWS ( ALLSELECTED ( _Services[Short Name] ) )
+			        = COUNTROWS ( ALL ( _Services[Short Name] ) )
+			
+			VAR HasBlank = ISBLANK(EnqVal) || ISBLANK(EnqTgt) || ISBLANK(TourVal) || ISBLANK(TourTgt)
+			
+			VAR EnqOK  = NOT ISBLANK(EnqVal)  && NOT ISBLANK(EnqTgt)  && EnqVal  >= EnqTgt
+			VAR TourOK = NOT ISBLANK(TourVal) && NOT ISBLANK(TourTgt) && TourVal >= TourTgt
+			
+			-- distance to target (percentage points on 0..1 scale)
+			VAR EnqGap  = IF(HasBlank, BLANK(), MAX(0, EnqTgt  - EnqVal))
+			VAR TourGap = IF(HasBlank, BLANK(), MAX(0, TourTgt - TourVal))
+			RETURN
+			SWITCH (
+			    TRUE(),
+			    AllSel,                                 "All Centres Selected",
+			    HasBlank,                               "N/A",
+			    EnqOK && NOT TourOK,                    "Improve Tour Conversions",
+			    NOT EnqOK && TourOK,                    "Improve Enquiry Conversions",
+			    NOT EnqOK && NOT TourOK && EnqGap >  TourGap, "Improve Enquiry Conversions",
+			    NOT EnqOK && NOT TourOK && TourGap > EnqGap,  "Improve Tour Conversions",
+			    NOT EnqOK && NOT TourOK,                "Improve Both",
+			    "On Target"
+			)
+			
+			```
+		lineageTag: f554a08a-c7e0-45ef-bcf4-6af42c8fab7a
+
+	measure 'EnqToTour  Conversion Calculation Card' =
+			
+			VAR ToursRaw = [Count Tours Scheduled (Enquired)]
+			VAR EnqRaw   = [Count Enquiries]
+			VAR Tours    = COALESCE ( ToursRaw, 0 )
+			VAR Enq      = COALESCE ( EnqRaw, 0 )
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    Enq = 0 && Tours = 0, "No enquiries or tours booked yet.",
+			    Enq = 0,              "0 tours booked (no enquiries).",
+			    Tours = 0,            "0 tours booked from " & FORMAT ( Enq, "#,0" ) & " enquiries.",
+			    FORMAT ( Tours, "#,0" ) & " " & IF ( Tours = 1, "tour", "tours" ) &
+			        " booked from " &
+			        FORMAT ( Enq, "#,0" ) & " " & IF ( Enq = 1, "enquiry", "enquiries" ) & "."
+			)
+		lineageTag: 33ba37fe-0f56-4283-abd3-300670db6c49
+
+	measure 'Tour Conversion Calculation Card' =
+			
+			VAR EnrolRaw = [Conv'd Tour (combined)]
+			VAR ToursRaw = [CompletedTours]
+			VAR Enrol    = COALESCE ( EnrolRaw, 0 )
+			VAR Tours    = COALESCE ( ToursRaw, 0 )
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    Tours = 0 && Enrol = 0, "No tours or enrollments yet.",
+			    Tours = 0,              "0 enrollments (no tours completed).",
+			    FORMAT ( Enrol, "#,0" ) & " " & IF ( Enrol = 1, "enrollment", "enrollments" ) &
+			        " from " &
+			        FORMAT ( Tours, "#,0" ) & " " & IF ( Tours = 1, "tour", "tours" ) & "."
+			)
+		lineageTag: aaf1da63-feb9-4f45-bcd0-272c037ef95a
+
+	measure 'Tour Completed In Range' =
+			
+			VAR SelectedStart =
+			    MIN ( '_Date'[Date] )
+			VAR SelectedEnd =
+			    MAX ( '_Date'[Date] )
+			RETURN
+			IF (
+			    NOT ISBLANK ( SelectedStart )
+			        && NOT ISBLANK ( SelectedEnd )
+			        && MAX ( 'LineLeader_Updates'[Date Tour Completed (LLTasks)] ) >= SelectedStart
+			        && MAX ( 'LineLeader_Updates'[Date Tour Completed (LLTasks)] ) <= SelectedEnd,
+			    1,
+			    0
+			)
+		formatString: 0
+		lineageTag: 0dfd9942-cf50-4116-8c31-5159a94187b7
+
+	measure 'Children Enrolled' =
+			
+			VAR MinDate = MIN ( _date[Date] )
+			VAR MaxDate = MAX ( _date[Date] )
+			RETURN
+			CALCULATE (
+			    DISTINCTCOUNT ( LineLeader_Updates[child_id] ),
+			    LineLeader_Updates[type] = "Status",
+			    LineLeader_Updates[to] IN { "4", "6" },
+			    NOT ( ISBLANK ( LineLeader_Updates[Date Tour Completed (LLTasks)] ) ),
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] >= MinDate,
+			    LineLeader_Updates[Date Tour Completed (LLTasks)] <= MaxDate,
+			    ALL ( LineLeader_Updates )
+			)
+		formatString: 0
+		lineageTag: a8288e0b-b2ff-4242-b0ec-c1acd8ea59f8
+
+	measure 'Enrollments In Range' =
+			
+			VAR SelectedStart =
+			    MIN ( '_Date'[Date] )
+			VAR SelectedEnd =
+			    MAX ( '_Date'[Date] )
+			RETURN
+			IF (
+			    NOT ISBLANK ( SelectedStart )
+			        && NOT ISBLANK ( SelectedEnd )
+			        && (MAX ( 'LineLeader_Updates'[Date Enrolled] ) >= SelectedStart
+			        && MAX ( 'LineLeader_Updates'[Date Enrolled] ) <= SelectedEnd) ||
+			         (MAX ( 'LineLeader_Updates'[Date Tour Completed (LLTasks)] ) >= SelectedStart
+			        && MAX ( 'LineLeader_Updates'[Date Tour Completed (LLTasks)] ) <= SelectedEnd),
+			    1,
+			    0
+			)
+		formatString: 0
+		lineageTag: c014072f-2355-4ffd-8c39-f017d8db86e2
+
+	partition _Measures = m
+		mode: import
+		queryGroup: Combined
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Measures = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Measures", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Measures"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

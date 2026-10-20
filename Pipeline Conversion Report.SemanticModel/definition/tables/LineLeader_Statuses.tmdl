@@ -1,0 +1,132 @@
+table LineLeader_Statuses
+	lineageTag: 45893b05-b2d2-4302-9251-f5ab609ceb55
+
+	column status_id
+		dataType: string
+		lineageTag: ac7fd492-9fe9-43ba-8880-f778c49d89f9
+		summarizeBy: none
+		sourceColumn: status_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 5336ffcb-ad43-4285-8a97-eb5778800279
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		lineageTag: 5b0fe5a3-a230-4f07-be35-1f69e7afb9c3
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_only
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4716c854-3262-4040-b345-5713fce7f9af
+		summarizeBy: none
+		sourceColumn: child_only
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_archive
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 06df79ad-01dd-4eac-8df7-fc5e280bd3c2
+		summarizeBy: none
+		sourceColumn: is_archive
+
+		annotation SummarizationSetBy = Automatic
+
+	column order
+		dataType: int64
+		formatString: 0
+		lineageTag: e7f64721-5a9c-467d-9ae1-15dc103bdd23
+		summarizeBy: sum
+		sourceColumn: order
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_exported
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 121b8982-543b-4757-89db-3218c6b3dd5e
+		summarizeBy: none
+		sourceColumn: is_exported
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_optional
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: df7deae0-d828-40cd-a9f0-5864b9d963df
+		summarizeBy: none
+		sourceColumn: is_optional
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_sortable
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bfacdf65-e9ac-4ec0-9cb3-28f404b2b388
+		summarizeBy: none
+		sourceColumn: is_sortable
+
+		annotation SummarizationSetBy = Automatic
+
+	column can_edit_logic
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 444c441d-829b-4218-806c-0bb8ab4bd642
+		summarizeBy: none
+		sourceColumn: can_edit_logic
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: dbb2f8d4-ac80-4dee-b3ad-ea91bc1b4bbe
+		summarizeBy: count
+		sourceColumn: Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: 7e57c739-23e4-43ad-b2ad-a11a8db30ea4
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7e8c1fa9-c418-48a8-b29b-a7d9318b9551
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_Statuses = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderStatuses = Source{[Schema="dbo",Item="LineLeaderStatuses"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_LineLeaderStatuses,{{"status_id", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

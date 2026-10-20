@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Pipeline Conversion Report"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bfb5010b-97bd-43fd-ae6d-5abdcb38bd7f"
+  }
+}

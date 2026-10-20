@@ -1,0 +1,533 @@
+table LineLeader_Updates
+	lineageTag: 088704b8-1a2f-42e1-86da-906a4ebdc04d
+
+	column family_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ed325bd-7af7-4dfa-a6f5-d0ac36b883c8
+		summarizeBy: none
+		sourceColumn: family_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column staff_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c6b79708-fc00-4679-a7ee-2dafaef9300c
+		summarizeBy: sum
+		sourceColumn: staff_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column staff_first_name
+		dataType: string
+		lineageTag: e936c521-3904-47fd-87a1-a2b4f328d38c
+		summarizeBy: none
+		sourceColumn: staff_first_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column staff_last_name
+		dataType: string
+		lineageTag: 5ac1af84-a650-45b8-afce-a747ea1ce05d
+		summarizeBy: none
+		sourceColumn: staff_last_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7afbbc52-9c4a-4e1d-b402-acc084c2cb56
+		summarizeBy: sum
+		sourceColumn: child_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column child_name
+		dataType: string
+		lineageTag: 0de2cf3a-02fa-44d2-845a-2f9724c51b23
+		summarizeBy: none
+		sourceColumn: child_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column action_date_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: bc9a73de-7ef3-4379-b791-9ec556deafd7
+		summarizeBy: none
+		sourceColumn: action_date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_time
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6ae0c4ad-08cf-4341-98d9-5479f6fd28ea
+		summarizeBy: none
+		sourceColumn: date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column type
+		dataType: string
+		lineageTag: 4e9a85dc-7dd0-43e1-8c81-1a456a9e7b53
+		summarizeBy: none
+		sourceColumn: type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column action
+		dataType: string
+		lineageTag: 603e026a-c0c5-42fd-89bc-6f6a77a4f2dc
+		summarizeBy: none
+		sourceColumn: action
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column details
+		dataType: string
+		lineageTag: 38e3052f-d61b-4f0f-b8f0-dfa5b137fde8
+		summarizeBy: none
+		sourceColumn: details
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column field_changes_type
+		dataType: string
+		lineageTag: 12b97520-5cec-4900-b0ae-028803d19af3
+		summarizeBy: none
+		sourceColumn: field_changes_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column field_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ca6174c1-fc92-4812-a87b-dc9570a32c5e
+		summarizeBy: sum
+		sourceColumn: field_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column field_name
+		dataType: string
+		lineageTag: f70b2f25-1082-4e40-a148-c891beacce13
+		summarizeBy: none
+		sourceColumn: field_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column from
+		dataType: string
+		lineageTag: daa2d853-f804-410f-8ec7-c503c26955b6
+		summarizeBy: none
+		sourceColumn: from
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column to
+		dataType: string
+		lineageTag: f55d37be-7ded-4bc0-959c-58bbec65b8ed
+		summarizeBy: none
+		sourceColumn: to
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column field_changes_date_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8ef73c5e-fd96-4fab-ae95-c4e9381ac3f5
+		summarizeBy: none
+		sourceColumn: field_changes_date_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_comment
+		dataType: string
+		lineageTag: 0d8d8b2a-e5ad-4d93-84ab-bc770f7d2a02
+		summarizeBy: none
+		sourceColumn: event_comment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ea53c67-8c82-45ce-8698-8aafbc8372ad
+		summarizeBy: count
+		sourceColumn: Id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineLeaderOrganisationId
+		dataType: int64
+		formatString: 0
+		lineageTag: c775bebb-5f86-4ad0-b454-a68082295c90
+		summarizeBy: count
+		sourceColumn: LineLeaderOrganisationId
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDateTimeUtc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 142fb34d-0733-4e31-9e2d-e3263cca6899
+		summarizeBy: none
+		sourceColumn: LastUpdatedDateTimeUtc
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age Group' = ```
+			LOOKUPVALUE(
+			    LineLeader_FamilyChildren[Age Group], 
+			    LineLeader_FamilyChildren[child_id], 
+			    LineLeader_Updates[child_id]
+			)
+			
+			```
+		lineageTag: 1bfa4e64-7d5b-4612-959e-71c43d9d0088
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'To Status Name' = LOOKUPVALUE( LineLeader_Statuses[name] ,  LineLeader_Statuses[status_id] , 'LineLeader_Updates'[to] )
+		lineageTag: 9cb60a10-428a-4b63-a8ce-36b4a803167c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Family_Location = RELATED( LineLeader_Families[center_id] )
+		formatString: 0
+		lineageTag: 09fda5e6-665b-4425-aeb0-7f1340d55b4f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Centre = ```
+			
+			VAR LocationKey = LineLeader_Updates[Family_Location]
+			RETURN
+			IF (
+			    ISBLANK(LocationKey),
+			    BLANK(),  // or "Unknown", "Unmapped", etc.
+			    LOOKUPVALUE(
+			        _Services[Short Name],
+			        _Services[ServiceId_LL],
+			        LocationKey
+			    )
+			)
+			
+			```
+		lineageTag: 5b1d87d4-bb51-41a8-9762-87e49b6eac3d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column LatestTourAddedDate =
+			
+			VAR CurrentFamilyID = LineLeader_Updates[family_id]
+			RETURN
+			CALCULATE(
+			    MIN(LineLeader_Tasks[completed_date_time]),
+			    FILTER(
+			        LineLeader_Tasks,
+			        LineLeader_Tasks[family_id] = CurrentFamilyID
+			            && LineLeader_Tasks[type_value] = "Tour"
+			            &&LineLeader_Tasks[is_completed] = TRUE()
+			    )
+			)
+		formatString: General Date
+		lineageTag: b0cb1281-4a6f-42c6-976d-8185fd22ddf0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column HasCompletedTour = ```
+			
+			VAR CurrentFamilyID = LineLeader_Updates[family_id]
+			RETURN
+			IF (
+			    COUNTROWS (
+			        FILTER (
+			            LineLeader_Tasks,
+			            LineLeader_Tasks[family_id] = CurrentFamilyID
+			                && LineLeader_Tasks[type_value] = "Tour"
+			        )
+			    ) > 0,
+			    1,
+			    0
+			) 
+			```
+		formatString: 0
+		lineageTag: 98db2f0f-d38b-42e7-b204-c5399b176d28
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Tour Completed (LLTasks)' =
+			
+			VAR CurrentFamilyID = LineLeader_Updates[family_id]
+			RETURN
+			CALCULATE(
+			    MIN(LineLeader_Tasks[completed_date_time]),
+			    FILTER(
+			        LineLeader_Tasks,
+			        LineLeader_Tasks[family_id] = CurrentFamilyID
+			            && LineLeader_Tasks[type_value] = "Tour"
+			            &&LineLeader_Tasks[is_completed] = TRUE()
+			    )
+			)
+		formatString: Short Date
+		lineageTag: 916856a0-d5e0-4a7f-b649-c33194b60044
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Enrolled' =
+			
+			CALCULATE(
+			    MAX(LineLeader_Updates[field_changes_date_time]),
+			    FILTER(
+			        LineLeader_Updates,
+			        LineLeader_Updates[family_id] = EARLIER(LineLeader_Updates[family_id])
+			            && LineLeader_Updates[child_id] = EARLIER(LineLeader_Updates[child_id])
+			            && LineLeader_Updates[type] = "Status"
+			            && LineLeader_Updates[to] IN {"6", "4"}
+			    )
+			)
+		formatString: Short Date
+		lineageTag: fa9f860e-4a10-4409-84e3-a6beace12221
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Tour Scheduled' =
+			
+			CALCULATE(
+			    MIN(LineLeader_Updates[field_changes_date_time]),
+			    FILTER(
+			        LineLeader_Updates,
+			        LineLeader_Updates[family_id] = EARLIER(LineLeader_Updates[family_id])
+			            && LineLeader_Updates[child_id] = EARLIER(LineLeader_Updates[child_id])
+			            && LineLeader_Updates[type] = "Status"
+			            && LineLeader_Updates[to] = "11"
+			    )
+			)
+		formatString: Short Date
+		lineageTag: bda58ad5-867d-4012-9064-545a2aa48851
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column EnquiryDate = lookupvalue(LineLeader_Enquiries[FirstDate], LineLeader_Enquiries[family_id], LineLeader_Updates[family_id])
+		formatString: General Date
+		lineageTag: e237bb10-84b7-4fdb-bc64-1330ddf4a776
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaysToBookTour = datediff(LineLeader_Updates[EnquiryDate], LineLeader_Updates[Date Tour Scheduled], DAY)
+		formatString: 0
+		lineageTag: 12787e9e-8d43-4815-928e-4f693fd28778
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column TourBookedLeadTime = datediff(LineLeader_Updates[Date Tour Scheduled], LineLeader_Updates[Date Tour Completed (LLTasks)], DAY)
+		formatString: 0
+		lineageTag: 764894f0-eca5-4f74-bae5-46f029f1cac8
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column TourToEnrolledDays = datediff(LineLeader_Updates[Date Tour Completed (LLTasks)], LineLeader_Updates[Date Enrolled], day)
+		formatString: 0
+		lineageTag: 496863cd-864f-435e-9dc4-fba02219a754
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateRejected =
+			
+			CALCULATE(
+			    MIN(LineLeader_Updates[field_changes_date_time]),
+			    FILTER(
+			        LineLeader_Updates,
+			        LineLeader_Updates[family_id] = EARLIER(LineLeader_Updates[family_id])
+			            && LineLeader_Updates[child_id] = EARLIER(LineLeader_Updates[child_id])
+			            && LineLeader_Updates[type] = "Status"
+			            && LineLeader_Updates[to] in {"8", "9", "10"}
+			    )
+			)
+		formatString: General Date
+		lineageTag: 498e2162-6f1e-4442-8a41-a730a4d9c61e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column TourToRejectedDays = datediff(LineLeader_Updates[Date Tour Completed (LLTasks)], LineLeader_Updates[DateRejected], DAY)
+		formatString: 0
+		lineageTag: 1c33b072-20c6-4e00-9715-6576b806e3de
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateWaitlisted =
+			
+			CALCULATE(
+			    MIN(LineLeader_Updates[field_changes_date_time]),
+			    FILTER(
+			        LineLeader_Updates,
+			        LineLeader_Updates[family_id] = EARLIER(LineLeader_Updates[family_id])
+			            && LineLeader_Updates[child_id] = EARLIER(LineLeader_Updates[child_id])
+			            && LineLeader_Updates[type] = "Status"
+			            && LineLeader_Updates[to] in {"4"}
+			    )
+			)
+		formatString: General Date
+		lineageTag: bb012938-09c6-4db4-8929-9dd5b75232a5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateEnrolled =
+			
+			CALCULATE(
+			    MIN(LineLeader_Updates[field_changes_date_time]),
+			    FILTER(
+			        LineLeader_Updates,
+			        LineLeader_Updates[family_id] = EARLIER(LineLeader_Updates[family_id])
+			            && LineLeader_Updates[child_id] = EARLIER(LineLeader_Updates[child_id])
+			            && LineLeader_Updates[type] = "Status"
+			            && LineLeader_Updates[to] in {"6"}
+			    )
+			)
+		formatString: General Date
+		lineageTag: 6ecfcc60-dbe2-47a5-b161-b80b97cd3ec6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Child Name' = ```
+			
+			VAR ChildrenForFamily =
+			    FILTER (
+			        LineLeader_FamilyChildren,
+			        LineLeader_FamilyChildren[family_id] = LineLeader_Updates[family_id]
+			    )
+			VAR EnrichedChildren =
+			    ADDCOLUMNS (
+			        ChildrenForFamily,
+			        "_Full", LineLeader_FamilyChildren[name],
+			        // First = text before first space (or whole name if single-token)
+			        "_First",
+			            VAR _n = LineLeader_FamilyChildren[name]
+			            VAR _pos = FIND ( " ", _n & " ", 1, 0 )
+			            RETURN IF ( _pos = 0, _n, LEFT ( _n, _pos - 1 ) ),
+			        // Last = text after last space (blank if single-token)
+			        "_Last",
+			            VAR _n = LineLeader_FamilyChildren[name]
+			            VAR _spaces = LEN ( _n ) - LEN ( SUBSTITUTE ( _n, " ", "" ) )
+			            VAR _lastPos =
+			                FIND ( "|", SUBSTITUTE ( _n, " ", "|", _spaces ), 1, 0 )
+			            RETURN IF ( _lastPos = 0, BLANK (), RIGHT ( _n, LEN ( _n ) - _lastPos ) )
+			    )
+			VAR FirstTwo =
+			    TOPN ( 2, EnrichedChildren, [_Full], ASC )
+			VAR ChildCount = COUNTROWS ( FirstTwo )
+			
+			// deterministically pick row 1 and row 2 by [_Full] ascending
+			VAR Row1 = TOPN ( 1, FirstTwo, [_Full], ASC )
+			VAR Row2 = EXCEPT ( FirstTwo, Row1 )
+			
+			VAR C1_First = MAXX ( Row1, [_First] )
+			VAR C1_Last  = MAXX ( Row1, [_Last] )
+			VAR C1_Full  = MAXX ( Row1, [_Full] )
+			
+			VAR C2_First = MAXX ( Row2, [_First] )
+			VAR C2_Last  = MAXX ( Row2, [_Last] )
+			VAR C2_Full  = MAXX ( Row2, [_Full] )
+			
+			// NEW: consider duplicates; EXCEPT can drop a duplicate row, leaving Row2 empty
+			VAR DedupSameFullName =
+			    ChildCount >= 2 && ( ISBLANK ( C2_Full ) || C1_Full = C2_Full )
+			
+			VAR SameLast = NOT ISBLANK ( C1_Last ) && C1_Last = C2_Last
+			
+			RETURN
+			SWITCH (
+			    TRUE (),
+			    ChildCount = 0, BLANK (),
+			    ChildCount = 1, C1_Full,
+			    DedupSameFullName, C1_Full,                                 // <-- fix trailing " & "
+			    SameLast, C1_First & " & " & C2_First & " " & C1_Last,
+			    C1_Full & " & " & C2_Full
+			)
+			
+			```
+		lineageTag: 4fe706dc-2435-4d8a-9d1f-a389e0019b9d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LineLeader_Updates = m
+		mode: import
+		queryGroup: LineLeader
+		source =
+				let
+				    Source = Sql.Database("yourdatahubececservicesptyltd.database.windows.net", "yourdatahub_ececservicesptyltd"),
+				    dbo_LineLeaderUpdates = Source{[Schema="dbo",Item="LineLeaderUpdates"]}[Data],
+				    #"Extracted Date" = Table.TransformColumns(dbo_LineLeaderUpdates,{{"date_time", DateTime.Date, type date}})
+				in
+				    #"Extracted Date"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
