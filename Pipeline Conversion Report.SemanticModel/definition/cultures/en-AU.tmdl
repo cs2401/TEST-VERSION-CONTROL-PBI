@@ -33486,7 +33486,7 @@ cultureInfo en-AU
 			          }
 			        },
 			        {
-			          "Enquiry to Tour Conversion": {
+			          "Enquiry Conversion Rate": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -33496,7 +33496,7 @@ cultureInfo en-AU
 			          }
 			        },
 			        {
-			          "Enquiry Conversion Rate": {
+			          "Enquiry to Tour Conversion": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
